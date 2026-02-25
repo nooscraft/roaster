@@ -9,7 +9,6 @@ const BANNED_PATTERNS = [
 
 const PERSONAL_ATTACK_PATTERNS = [
   /\b(you are|you're|he is|she is|they are)\s+(stupid|dumb|idiot|incompetent)/i,
-  /\b(liar|lying|lies)\b/i,
   /\b(should be fired|should resign|should quit)\b/i,
 ];
 

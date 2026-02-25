@@ -19,41 +19,46 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
       </head>
-      <body>
+      <body style={{ backgroundColor: '#F2ECD8' }}>
         <SessionProvider>
-        <div className="starfield" aria-hidden="true">
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div
-              key={i}
-              className="star"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-              }}
-            />
-          ))}
-        </div>
-        
         <div className="retro-container">
-          <header className="border-b-4 border-orange-500 bg-black/80 p-4 mb-8">
+          {/* Header */}
+          <header style={{ background: '#1a1a1a', borderBottom: '4px solid #1a1a1a' }} className="p-4 mb-8">
             <div className="max-w-7xl mx-auto">
-              <h1 className="pixel-font text-orange-500 text-center mb-2 glow-text">
-                AI BUBBLE ROSTER
-              </h1>
-              <p className="text-center text-yellow-400 text-sm">
-                🔥 ROASTING THE HYPE SINCE 2026 🔥
-              </p>
-              <nav className="mt-4 flex justify-center gap-4 flex-wrap">
-                <a href="/" className="text-yellow-400 hover:text-orange-500 transition-colors">
-                  [HOME]
-                </a>
-                <a href="/leaderboard" className="text-yellow-400 hover:text-orange-500 transition-colors">
-                  [LEADERBOARD]
-                </a>
-                <a href="/submit" className="text-yellow-400 hover:text-orange-500 transition-colors">
-                  [SUBMIT]
-                </a>
+              <div className="flex items-center justify-between">
+                <div />
+                <div className="text-center">
+                  <h1 className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '18px' }}>
+                    AI BUBBLE ROSTER
+                  </h1>
+                  <p style={{ color: '#888', fontSize: '14px', fontFamily: 'VT323, monospace' }}>
+                    ROASTING THE HYPE SINCE 2026
+                  </p>
+                </div>
+                <div />
+              </div>
+              <nav className="mt-4 flex justify-center gap-3 flex-wrap">
+                {[
+                  { href: '/', label: 'HOME' },
+                  { href: '/leaderboard', label: 'LEADERBOARD' },
+                  { href: '/submit', label: 'SUBMIT' },
+                ].map(({ href, label }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    style={{
+                      background: '#F5C518',
+                      color: '#1a1a1a',
+                      border: '2px solid #F5C518',
+                      padding: '4px 12px',
+                      fontFamily: '"Press Start 2P", cursive',
+                      fontSize: '9px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {label}
+                  </a>
+                ))}
               </nav>
             </div>
           </header>
@@ -62,16 +67,13 @@ export default function RootLayout({
             {children}
           </main>
 
-          <footer className="border-t-4 border-orange-500 bg-black/80 p-6 mt-12">
+          <footer style={{ background: '#1a1a1a', borderTop: '4px solid #1a1a1a' }} className="p-6 mt-12">
             <div className="max-w-7xl mx-auto text-center">
-              <p className="text-orange-500 pixel-font text-xs mb-2">
-                <span className="blink">🔥</span> SHIP OR DIE <span className="blink">🔥</span>
+              <p className="pixel-font mb-2" style={{ color: '#F5C518', fontSize: '10px' }}>
+                AI BUBBLE ROSTER
               </p>
-              <p className="text-yellow-400 text-sm">
-                Parody content. No personal attacks. Just roasting the patterns.
-              </p>
-              <p className="text-orange-400 text-xs mt-2">
-                Made with 💾 and 🕹️ in the spirit of Ship or Die
+              <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '16px' }}>
+                Parody content. Roasting corporate hype, not people.
               </p>
             </div>
           </footer>

@@ -74,14 +74,26 @@ export class XAPIClient {
           return this.request<T>(endpoint, cost, retries - 1);
         }
 
-        const error = await response.text();
+        const errorText = await response.text();
+        let errorDetails = errorText;
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorDetails = JSON.stringify(errorJson, null, 2);
+        } catch {}
+        
         logger.error('X API error', {
           endpoint,
           status: response.status,
-          error,
+          error: errorDetails,
           duration,
         });
-        throw new Error(`X API error: ${response.status} - ${error}`);
+        
+        console.error('\n🚨 X API Error Details:');
+        console.error(`   Endpoint: ${endpoint}`);
+        console.error(`   Status: ${response.status}`);
+        console.error(`   Response: ${errorDetails}\n`);
+        
+        throw new Error(`X API error: ${response.status} - ${errorDetails}`);
       }
 
       const data = await response.json();
@@ -126,13 +138,17 @@ export class XAPIClient {
       const params = new URLSearchParams({
         max_results: (options.maxResults || 10).toString(),
         'tweet.fields': 'created_at,public_metrics,referenced_tweets,lang',
-        exclude: [
-          options.excludeReplies ? 'replies' : '',
-          options.excludeRetweets ? 'retweets' : '',
-        ]
-          .filter(Boolean)
-          .join(','),
       });
+
+      // Only add exclude parameter if there's something to exclude
+      const excludeItems = [
+        options.excludeReplies ? 'replies' : '',
+        options.excludeRetweets ? 'retweets' : '',
+      ].filter(Boolean);
+      
+      if (excludeItems.length > 0) {
+        params.append('exclude', excludeItems.join(','));
+      }
 
       if (options.sinceId) {
         params.append('since_id', options.sinceId);

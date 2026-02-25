@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --retro-bg: #000000;
-  --retro-fg: #FFFFFF;
-  --retro-orange: #FF6B35;
-  --retro-coral: #FF8C42;
-  --retro-yellow: #FFD23F;
-  --retro-cream: #FFF8E7;
-  --retro-dark: #0a0a0a;
-  --retro-border: 3px;
+  --cream: #F2ECD8;
+  --black: #1a1a1a;
+  --yellow: #F5C518;
+  --yellow-dark: #E6B800;
+  --white: #FFFFFF;
+  --gray: #888888;
+  --border: 3px solid #1a1a1a;
 }
 
 @theme inline {
-  --color-background: var(--retro-bg);
-  --color-foreground: var(--retro-fg);
+  --color-background: var(--cream);
+  --color-foreground: var(--black);
   --font-pixel: "Press Start 2P", cursive;
   --font-mono: "VT323", monospace;
 }
@@ -23,38 +22,18 @@
 }
 
 body {
-  background: #000000;
-  color: var(--retro-fg);
+  background: var(--cream);
+  color: var(--black);
   font-family: "VT323", monospace;
   font-size: 20px;
   line-height: 1.6;
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255, 107, 53, 0.03) 2px,
-      rgba(255, 107, 53, 0.03) 4px
-    );
-  pointer-events: none;
-  z-index: 1;
-}
-
+/* ── Layout ── */
 .retro-container {
   position: relative;
-  z-index: 2;
 }
 
 .pixel-font {
@@ -63,94 +42,218 @@ body::before {
   line-height: 1.8;
 }
 
-.retro-border {
-  border: var(--retro-border) solid var(--retro-orange);
-  box-shadow: 
-    inset 0 0 0 1px rgba(255, 107, 53, 0.2),
-    0 0 8px rgba(255, 107, 53, 0.15);
+/* ── Header / Footer ── */
+.retro-header {
+  background: var(--black);
+  border-bottom: var(--border);
+  padding: 16px;
 }
 
-.retro-border-orange {
-  border: var(--retro-border) solid var(--retro-orange);
-  box-shadow: 
-    inset 0 0 0 1px rgba(255, 107, 53, 0.2),
-    0 0 8px rgba(255, 107, 53, 0.15);
+.retro-footer {
+  background: var(--black);
+  border-top: var(--border);
+  padding: 24px;
 }
 
-.retro-border-yellow {
-  border: var(--retro-border) solid var(--retro-yellow);
-  box-shadow: 
-    inset 0 0 0 1px rgba(255, 210, 63, 0.2),
-    0 0 8px rgba(255, 210, 63, 0.15);
+/* ── Cards ── */
+.retro-card {
+  background: var(--white);
+  border: var(--border);
+  padding: 20px;
+  box-shadow: 4px 4px 0 var(--black);
+  position: relative;
 }
 
+.roast-card {
+  background: var(--white);
+  border: 3px solid var(--black);
+  padding: 20px;
+  box-shadow: 5px 5px 0 var(--black);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.roast-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--black);
+}
+
+.roast-handle {
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  color: var(--black);
+  text-decoration: none;
+  background: var(--yellow);
+  padding: 4px 8px;
+  border: 2px solid var(--black);
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.roast-handle:hover {
+  background: var(--yellow-dark);
+}
+
+.roast-archetype {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.roast-label {
+  display: block;
+  font-family: "Press Start 2P", cursive;
+  font-size: 8px;
+  color: var(--gray);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.roast-translation {
+  background: var(--cream);
+  border-left: 4px solid var(--yellow);
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 18px;
+}
+
+.roast-reality {
+  background: #f9f9f9;
+  border-left: 4px solid var(--black);
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 18px;
+}
+
+.roast-tag {
+  background: var(--yellow);
+  border: 2px solid var(--black);
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--black);
+}
+
+.roast-view-btn {
+  font-family: "Press Start 2P", cursive;
+  font-size: 9px;
+  background: var(--black);
+  color: var(--white);
+  padding: 6px 12px;
+  text-decoration: none;
+  display: inline-block;
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--gray);
+  transition: all 0.1s;
+}
+
+.roast-view-btn:hover {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+/* ── Buttons ── */
 .retro-button {
-  background: #FF6B35;
-  border: 2px solid #FFFFFF;
-  color: #FFFFFF;
-  padding: 12px 24px;
+  background: var(--yellow);
+  border: 3px solid var(--black);
+  color: var(--black);
+  padding: 10px 20px;
   font-family: "Press Start 2P", cursive;
   font-size: 10px;
   cursor: pointer;
   text-transform: uppercase;
-  box-shadow: 
-    3px 3px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 4px 0 var(--black);
   transition: all 0.1s;
-  position: relative;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .retro-button:hover {
-  background: #FF8C42;
+  background: var(--yellow-dark);
   transform: translate(1px, 1px);
-  box-shadow: 
-    2px 2px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .retro-button:active {
-  transform: translate(3px, 3px);
-  box-shadow: 
-    0px 0px 0 rgba(0, 0, 0, 0.5);
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
 
+/* ── Inputs ── */
 .retro-input {
-  background: #000000;
-  border: 3px inset #666666;
-  color: #FFD23F;
+  background: var(--white);
+  border: 3px solid var(--black);
+  color: var(--black);
   padding: 8px 12px;
   font-family: "VT323", monospace;
-  font-size: 18px;
-  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 20px;
+  width: 100%;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
 }
 
 .retro-input:focus {
   outline: none;
-  border-color: #FF6B35;
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.5),
-    0 0 5px rgba(255, 107, 53, 0.3);
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 3px var(--yellow);
 }
 
-.retro-card {
-  background: rgba(10, 10, 10, 0.8);
-  border: 3px solid #FF6B35;
-  padding: 20px;
-  box-shadow: 
-    4px 4px 0 rgba(0, 0, 0, 0.3),
-    inset 0 0 10px rgba(255, 107, 53, 0.05);
-  position: relative;
-}
-
+/* ── Badges ── */
 .retro-badge {
-  background: #FF6B35;
-  border: 2px solid #FFFFFF;
-  padding: 4px 12px;
+  background: var(--yellow);
+  border: 2px solid var(--black);
+  padding: 4px 10px;
   font-family: "Press Start 2P", cursive;
   font-size: 8px;
   display: inline-block;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 0 var(--black);
   text-transform: uppercase;
+  color: var(--black);
 }
 
+/* ── Tables ── */
+.retro-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid var(--black);
+}
+
+.retro-table th {
+  background: var(--black);
+  color: var(--white);
+  padding: 12px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 9px;
+  text-align: left;
+  border-bottom: 3px solid var(--black);
+}
+
+.retro-table td {
+  padding: 12px;
+  border-bottom: 2px solid var(--black);
+  background: var(--white);
+}
+
+.retro-table tr:nth-child(even) td {
+  background: var(--cream);
+}
+
+.retro-table tr:hover td {
+  background: #FFF9E0;
+}
+
+/* ── Borders ── */
+.retro-border {
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.retro-border-yellow {
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--yellow);
+}
+
+/* ── Animations ── */
 @keyframes blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -160,75 +263,26 @@ body::before {
   animation: blink 1s infinite;
 }
 
-@keyframes rainbow {
-  0% { color: #FF6B35; }
-  25% { color: #FF8C42; }
-  50% { color: #FFD23F; }
-  75% { color: #FF8C42; }
-  100% { color: #FF6B35; }
-}
-
-.rainbow-text {
-  animation: rainbow 3s linear infinite;
-}
-
-.retro-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 2px solid #FF6B35;
-}
-
-.retro-table th {
-  background: #FF6B35;
-  color: #FFFFFF;
-  padding: 12px;
-  font-family: "Press Start 2P", cursive;
-  font-size: 10px;
-  text-align: left;
-  border-bottom: 2px solid #FF8C42;
-}
-
-.retro-table td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255, 107, 53, 0.3);
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.retro-table tr:nth-child(even) td {
-  background: rgba(10, 10, 10, 0.5);
-}
-
-.retro-table tr:hover td {
-  background: rgba(255, 107, 53, 0.1);
-}
-
-.starfield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  animation: twinkle 3s infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
+/* ── Glow (subtle, for titles) ── */
 .glow-text {
-  text-shadow: 
-    0 0 5px rgba(255, 107, 53, 0.3),
-    0 0 10px rgba(255, 107, 53, 0.2);
+  text-shadow: 2px 2px 0 var(--yellow);
+}
+
+/* ── Starfield (repurposed as subtle texture) ── */
+.starfield {
+  display: none;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--black);
+  border: 2px solid var(--cream);
 }

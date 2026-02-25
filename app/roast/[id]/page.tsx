@@ -1,9 +1,8 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { RetroCard } from '@/components/retro/RetroCard';
-import { RetroBadge } from '@/components/retro/RetroBadge';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
 import { Metadata } from 'next';
+import { CopyButton } from './CopyButton';
 
 interface PageProps {
   params: { id: string };
@@ -12,165 +11,174 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const roast = await prisma.roast.findUnique({
     where: { id: params.id, status: 'APPROVED' },
-    include: {
-      post: {
-        include: { source: true },
-      },
-    },
+    include: { post: { include: { source: true } } },
   });
 
-  if (!roast) {
-    return {
-      title: 'Roast Not Found',
-    };
-  }
+  if (!roast) return { title: 'Roast Not Found' };
 
   return {
-    title: `Roast: ${roast.archetype} from @${roast.post.source.handle}`,
-    description: roast.sections.translation,
+    title: `${roast.archetype} — @${roast.post.source.handle}`,
+    description: (roast.sections as any).translation,
   };
 }
 
 export default async function RoastDetailPage({ params }: PageProps) {
   const roast = await prisma.roast.findUnique({
     where: { id: params.id, status: 'APPROVED' },
-    include: {
-      post: {
-        include: { source: true },
-      },
-    },
+    include: { post: { include: { source: true } } },
   });
 
-  if (!roast) {
-    notFound();
-  }
+  if (!roast) notFound();
+
+  const sections = roast.sections as any;
+  const handle = roast.post.source.handle;
+  const xProfileUrl = `https://x.com/${handle}`;
+  const scoreBreakdown: Array<{ label: string; score: number; reason?: string }> =
+    sections.scoreBreakdown || [];
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <a
-          href="/"
-          className="text-cyan-300 hover:text-cyan-200 text-sm"
-        >
-          ← Back to Feed
-        </a>
-      </div>
+    <div className="max-w-3xl mx-auto">
+      {/* Back */}
+      <a
+        href="/"
+        className="retro-button inline-block mb-6"
+        style={{ fontSize: '9px', padding: '8px 16px' }}
+      >
+        ← BACK TO FEED
+      </a>
 
-      <RetroCard variant="pink" className="mb-6">
-        <div className="flex justify-center mb-6">
-          <BubbleScoreMeter score={roast.bubbleScore} size="lg" />
-        </div>
-
-        <div className="text-center mb-6">
-          <h1 className="text-3xl text-yellow-300 pixel-font mb-2 glow-text">
-            {roast.archetype}
-          </h1>
-          <h2 className="text-2xl text-pink-400 font-bold mb-4">
-            @{roast.post.source.handle}
-          </h2>
-          <div className="flex justify-center gap-2 flex-wrap">
-            {roast.tags.map((tag, i) => (
-              <RetroBadge key={i}>#{tag}</RetroBadge>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-6 p-4 bg-black/30 border-2 border-cyan-400">
-          <h3 className="text-cyan-300 font-bold mb-2">Original Post</h3>
-          <p className="text-white mb-3">{roast.post.textExcerpt}</p>
-          <a
-            href={roast.post.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-pink-400 hover:text-pink-300 text-sm"
-          >
-            View on X →
-          </a>
-        </div>
-
-        <div className="space-y-4 mb-6">
-          <div className="p-4 bg-purple-900/50 border-2 border-cyan-400">
-            <h3 className="text-cyan-300 font-bold mb-2 pixel-font text-sm">
-              📝 TRANSLATION
-            </h3>
-            <p className="text-white text-lg italic">
-              {roast.sections.translation}
+      <div className="retro-card">
+        {/* Score + Handle */}
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <a
+              href={xProfileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="roast-handle"
+            >
+              @{handle}
+            </a>
+            <p className="mt-3" style={{
+              fontFamily: '"Press Start 2P", cursive',
+              fontSize: '13px',
+              color: '#c0392b',
+              lineHeight: '1.6',
+            }}>
+              {roast.archetype}
             </p>
           </div>
-
-          <div className="p-4 bg-purple-900/50 border-2 border-yellow-400">
-            <h3 className="text-yellow-300 font-bold mb-2 pixel-font text-sm">
-              ⚡ REALITY CHECK
-            </h3>
-            <p className="text-white text-lg">
-              {roast.sections.realityCheck}
-            </p>
-          </div>
+          <BubbleScoreMeter score={roast.bubbleScore} size="md" />
         </div>
 
-        <div className="mb-6">
-          <h3 className="text-pink-400 font-bold mb-4 pixel-font">
-            📊 SCORE BREAKDOWN
-          </h3>
-          <div className="space-y-3">
-            {roast.sections.scoreBreakdown?.map((item: any, i: number) => (
-              <div key={i} className="p-4 bg-black/30 border-2 border-purple-600">
-                <div className="flex justify-between items-center mb-2">
-                  <strong className="text-cyan-300 text-lg">{item.label}</strong>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 h-4 bg-black border-2 border-cyan-400">
-                      <div
-                        className="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-pink-500"
-                        style={{ width: `${(item.score / 10) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-yellow-300 font-bold pixel-font text-sm">
-                      {item.score}/10
+        {/* Tags */}
+        <div className="flex gap-2 flex-wrap mb-6">
+          {roast.tags.map((tag, i) => (
+            <span key={i} className="roast-tag">#{tag}</span>
+          ))}
+        </div>
+
+        {/* Original post */}
+        <div style={{
+          background: '#f9f9f9',
+          border: '2px solid #1a1a1a',
+          borderLeft: '5px solid #1a1a1a',
+          padding: '14px 16px',
+          marginBottom: '20px',
+          fontFamily: 'VT323, monospace',
+          fontSize: '18px',
+          color: '#333',
+        }}>
+          <span style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '7px', color: '#888', display: 'block', marginBottom: '8px' }}>
+            ORIGINAL POST
+          </span>
+          "{roast.post.textExcerpt}"
+          {roast.post.url && (
+            <a
+              href={roast.post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-2"
+              style={{ fontSize: '14px', color: '#888', textDecoration: 'underline' }}
+            >
+              View on X →
+            </a>
+          )}
+        </div>
+
+        {/* Translation */}
+        <div className="roast-translation mb-4">
+          <span className="roast-label">WHAT THEY MEANT</span>
+          <p style={{ fontSize: '20px' }}>{sections.translation}</p>
+        </div>
+
+        {/* Reality check */}
+        <div className="roast-reality mb-6">
+          <span className="roast-label">REALITY CHECK</span>
+          <p style={{ fontSize: '20px' }}>{sections.realityCheck}</p>
+        </div>
+
+        {/* Score breakdown */}
+        {scoreBreakdown.length > 0 && (
+          <div className="mb-6">
+            <p className="roast-label mb-3">SCORE BREAKDOWN</p>
+            <div className="flex flex-col gap-3">
+              {scoreBreakdown.map((item, i) => (
+                <div key={i} style={{ border: '2px solid #1a1a1a', padding: '12px' }}>
+                  <div className="flex justify-between items-center mb-2">
+                    <span style={{ fontFamily: 'VT323, monospace', fontSize: '18px', fontWeight: 'bold' }}>
+                      {item.label}
                     </span>
+                    <span className="retro-badge">{item.score}/10</span>
+                  </div>
+                  <div style={{ background: '#eee', height: '8px', border: '2px solid #1a1a1a' }}>
+                    <div
+                      style={{
+                        width: `${(item.score / 10) * 100}%`,
+                        height: '100%',
+                        background: '#F5C518',
+                      }}
+                    />
                   </div>
                 </div>
-                <p className="text-white">{item.reason}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {roast.sections.awardCandidate && (
-          <div className="p-4 bg-gradient-to-r from-pink-600 to-purple-600 border-2 border-yellow-400">
-            <h3 className="text-yellow-300 font-bold mb-2 pixel-font">
-              🏆 AWARD CANDIDATE
-            </h3>
-            <p className="text-white text-lg">
-              {roast.sections.awardCandidate}
+        {/* Award */}
+        {sections.awardCandidate && (
+          <div style={{
+            background: '#F5C518',
+            border: '3px solid #1a1a1a',
+            boxShadow: '4px 4px 0 #1a1a1a',
+            padding: '16px',
+            marginBottom: '24px',
+          }}>
+            <span className="roast-label">AWARD</span>
+            <p style={{ fontFamily: 'VT323, monospace', fontSize: '22px', fontWeight: 'bold', color: '#1a1a1a' }}>
+              🏆 {sections.awardCandidate}
             </p>
           </div>
         )}
 
-        <div className="mt-6 pt-6 border-t-2 border-cyan-400">
-          <div className="flex justify-between items-center">
-            <p className="text-cyan-300 text-sm">
-              Posted: {new Date(roast.post.publishedAt).toLocaleDateString()}
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert('Link copied!');
-                }}
-                className="px-3 py-2 bg-purple-800 hover:bg-purple-700 text-sm"
-              >
-                📋 COPY LINK
-              </button>
-              <a
-                href={`/report?roastId=${roast.id}`}
-                className="px-3 py-2 bg-red-800 hover:bg-red-700 text-sm"
-              >
-                ⚠️ REPORT
-              </a>
-            </div>
+        {/* Footer */}
+        <div className="flex justify-between items-center pt-4" style={{ borderTop: '2px solid #1a1a1a' }}>
+          <span style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#888' }}>
+            {new Date(roast.post.publishedAt).toLocaleDateString()}
+          </span>
+          <div className="flex gap-2">
+            <CopyButton />
+            <a
+              href={`/report?roastId=${roast.id}`}
+              className="roast-view-btn"
+              style={{ background: '#c0392b' }}
+            >
+              ⚠ REPORT
+            </a>
           </div>
         </div>
-      </RetroCard>
+      </div>
     </div>
   );
 }

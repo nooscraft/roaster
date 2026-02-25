@@ -1,5 +1,3 @@
-import { RetroCard } from './retro/RetroCard';
-import { RetroBadge } from './retro/RetroBadge';
 import { BubbleScoreMeter } from './retro/BubbleScoreMeter';
 
 interface RoastCardProps {
@@ -10,6 +8,8 @@ interface RoastCardProps {
     tags: string[];
     sections: any;
     post: {
+      url?: string;
+      textExcerpt?: string;
       source: {
         handle: string;
       };
@@ -19,42 +19,71 @@ interface RoastCardProps {
 }
 
 export function RoastCard({ roast }: RoastCardProps) {
+  const handle = roast.post.source.handle;
+  const xProfileUrl = `https://x.com/${handle}`;
+
   return (
-    <RetroCard variant="cyan">
-      <div className="flex justify-between items-start mb-4">
-        <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
-        <RetroBadge>{roast.archetype}</RetroBadge>
-      </div>
-      <h3 className="text-pink-400 font-bold text-xl mb-2">
-        @{roast.post.source.handle}
-      </h3>
-      <p className="text-cyan-300 text-sm italic mb-3">
-        {roast.sections.translation}
-      </p>
-      <p className="text-yellow-300 text-sm mb-4">
-        {roast.sections.realityCheck}
-      </p>
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 flex-wrap">
-          {roast.tags.slice(0, 3).map((tag, i) => (
-            <span
-              key={i}
-              className="text-xs px-2 py-1 bg-purple-800 text-cyan-300"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-        <a
-          href={`/roast/${roast.id}`}
-          className="text-pink-400 hover:text-pink-300 text-sm font-bold"
-        >
-          VIEW FULL ROAST →
+    <div className="roast-card" style={{ fontSize: '14px' }}>
+      {/* Handle + Score row */}
+      <div className="flex justify-between items-center mb-3">
+        <a href={xProfileUrl} target="_blank" rel="noopener noreferrer" className="roast-handle">
+          @{handle}
         </a>
+        <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
       </div>
-      <p className="text-cyan-300 text-xs mt-3 opacity-70">
-        {new Date(roast.post.publishedAt).toLocaleDateString()}
+
+      {/* Archetype */}
+      <p className="mb-3" style={{
+        fontFamily: '"Press Start 2P", cursive',
+        fontSize: '11px',
+        color: '#c0392b',
+        lineHeight: '1.6',
+      }}>
+        {roast.archetype}
       </p>
-    </RetroCard>
+
+      {/* Original tweet */}
+      {roast.post.textExcerpt && (
+        <div style={{
+          background: '#f9f9f9',
+          border: '2px solid #1a1a1a',
+          borderLeft: '5px solid #1a1a1a',
+          padding: '10px 12px',
+          marginBottom: '12px',
+          fontFamily: 'VT323, monospace',
+          fontSize: '16px',
+          color: '#333',
+          lineHeight: '1.4',
+        }}>
+          <span style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '7px', color: '#888', display: 'block', marginBottom: '6px' }}>
+            ORIGINAL POST
+          </span>
+          "{roast.post.textExcerpt.length > 160
+            ? roast.post.textExcerpt.substring(0, 160) + '…'
+            : roast.post.textExcerpt}"
+        </div>
+      )}
+
+      {/* Translation */}
+      <div className="roast-translation">
+        <span className="roast-label">WHAT THEY MEANT</span>
+        <p style={{ fontSize: '16px' }}>{roast.sections?.translation}</p>
+      </div>
+
+      {/* Tags */}
+      <div className="flex gap-1 flex-wrap mt-3">
+        {roast.tags.slice(0, 3).map((tag, i) => (
+          <span key={i} className="roast-tag" style={{ fontSize: '11px' }}>#{tag}</span>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-black">
+        <span style={{ fontSize: '12px', color: '#888', fontFamily: 'VT323, monospace' }}>
+          {new Date(roast.post.publishedAt).toLocaleDateString()}
+        </span>
+        <a href={`/roast/${roast.id}`} className="roast-view-btn">MORE →</a>
+      </div>
+    </div>
   );
 }

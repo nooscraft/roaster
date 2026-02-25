@@ -30,7 +30,8 @@ jobs:
       - name: Generate roasts for pending posts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
           OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
         run: |
           node -e "

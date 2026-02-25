@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RetroCard } from '@/components/retro/RetroCard';
-import { RetroBadge } from '@/components/retro/RetroBadge';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
 
 interface LeaderboardEntry {
@@ -11,108 +9,134 @@ interface LeaderboardEntry {
   score: number;
 }
 
+const CATEGORIES = [
+  { key: 'most_agentic',      icon: '🤖', label: 'Most Agentic' },
+  { key: 'biggest_bubble',    icon: '🎈', label: 'Biggest Bubble' },
+  { key: 'most_grounded',     icon: '⚓', label: 'Most Grounded' },
+  { key: 'benchmark_theater', icon: '🎭', label: 'Benchmark Theater' },
+  { key: 'stealth_mode',      icon: '🥷', label: 'Stealth Mode' },
+];
+
 export default function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<Record<string, LeaderboardEntry>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchLeaderboard();
+    fetch('/api/leaderboard')
+      .then((r) => r.json())
+      .then((d) => setLeaderboard(d.leaderboard || {}))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
-
-  const fetchLeaderboard = async () => {
-    try {
-      const res = await fetch('/api/leaderboard');
-      const data = await res.json();
-      setLeaderboard(data.leaderboard || {});
-    } catch (error) {
-      console.error('Failed to fetch leaderboard:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const categories = [
-    { key: 'most_agentic', icon: '🤖', color: 'cyan' as const },
-    { key: 'biggest_bubble', icon: '🎈', color: 'pink' as const },
-    { key: 'most_grounded', icon: '⚓', color: 'yellow' as const },
-    { key: 'benchmark_theater', icon: '🎭', color: 'cyan' as const },
-    { key: 'stealth_mode', icon: '🥷', color: 'pink' as const },
-  ];
 
   return (
     <div>
+      {/* Title */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl text-yellow-300 pixel-font mb-4 glow-text">
+        <h1 className="pixel-font glow-text mb-2" style={{ fontSize: '18px', color: '#1a1a1a' }}>
           WEEKLY LEADERBOARD
         </h1>
-        <p className="text-cyan-300 text-lg">
+        <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
           This week's most notable achievements in AI hype
         </p>
       </div>
 
       {loading ? (
-        <RetroCard variant="cyan">
-          <p className="text-cyan-300 text-center py-8">Loading leaderboard...</p>
-        </RetroCard>
+        <div className="retro-card text-center py-12">
+          <p className="pixel-font" style={{ fontSize: '10px' }}>LOADING...</p>
+        </div>
       ) : Object.keys(leaderboard).length === 0 ? (
-        <RetroCard variant="cyan">
-          <p className="text-cyan-300 text-center py-8">
-            No awards this week. Check back soon!
+        <div className="retro-card text-center py-12">
+          <p className="pixel-font mb-3" style={{ fontSize: '10px' }}>NO AWARDS YET</p>
+          <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '18px' }}>
+            Generate and approve some roasts to populate the leaderboard!
           </p>
-        </RetroCard>
+        </div>
       ) : (
-        <div className="grid gap-6">
-          {categories.map(({ key, icon, color }) => {
+        <div className="grid gap-5">
+          {CATEGORIES.map(({ key, icon, label }) => {
             const entry = leaderboard[key];
             if (!entry) return null;
 
+            const handle = entry.roast?.post?.source?.handle;
+            const xUrl = `https://x.com/${handle}`;
+
             return (
-              <RetroCard key={key} variant={color}>
-                <div className="grid md:grid-cols-4 gap-4">
-                  <div className="md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="text-6xl mb-2">{icon}</div>
-                    <h3 className="pixel-font text-yellow-300 text-sm text-center">
-                      {entry.category}
-                    </h3>
+              <div key={key} className="retro-card">
+                <div className="grid md:grid-cols-4 gap-6">
+
+                  {/* Left: icon + award name */}
+                  <div className="flex flex-col items-center justify-center text-center border-r-2 border-black pr-4">
+                    <div style={{ fontSize: '48px', lineHeight: 1 }}>{icon}</div>
+                    <p className="pixel-font mt-3" style={{ fontSize: '8px', color: '#1a1a1a' }}>
+                      {label}
+                    </p>
+                    <span className="retro-badge mt-3">
+                      #{Math.round(entry.score * 10) / 10}
+                    </span>
                   </div>
 
+                  {/* Right: content */}
                   <div className="md:col-span-3">
-                    <div className="flex justify-between items-start mb-4">
+                    {/* Handle + score */}
+                    <div className="flex justify-between items-start mb-3">
                       <div>
-                        <h4 className="text-pink-400 font-bold text-2xl mb-2">
-                          @{entry.roast.post.source.handle}
-                        </h4>
-                        <RetroBadge>{entry.roast.archetype}</RetroBadge>
+                        <a
+                          href={xUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="roast-handle"
+                        >
+                          @{handle}
+                        </a>
+                        <p className="mt-2" style={{
+                          fontFamily: '"Press Start 2P", cursive',
+                          fontSize: '10px',
+                          color: '#c0392b',
+                          lineHeight: '1.6',
+                        }}>
+                          {entry.roast.archetype}
+                        </p>
                       </div>
                       <BubbleScoreMeter score={entry.roast.bubbleScore} size="sm" />
                     </div>
 
-                    <div className="mb-4 p-3 bg-black/30 border-2 border-purple-600">
-                      <p className="text-white text-sm line-clamp-2">
-                        {entry.roast.post.textExcerpt}
-                      </p>
+                    {/* Original post */}
+                    {entry.roast.post?.textExcerpt && (
+                      <div style={{
+                        background: '#f9f9f9',
+                        border: '2px solid #1a1a1a',
+                        borderLeft: '5px solid #1a1a1a',
+                        padding: '10px 12px',
+                        marginBottom: '12px',
+                        fontFamily: 'VT323, monospace',
+                        fontSize: '16px',
+                        color: '#333',
+                      }}>
+                        <span style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '7px', color: '#888', display: 'block', marginBottom: '6px' }}>
+                          ORIGINAL POST
+                        </span>
+                        "{entry.roast.post.textExcerpt.length > 180
+                          ? entry.roast.post.textExcerpt.substring(0, 180) + '…'
+                          : entry.roast.post.textExcerpt}"
+                      </div>
+                    )}
+
+                    {/* Translation */}
+                    <div className="roast-translation">
+                      <span className="roast-label">WHAT THEY MEANT</span>
+                      <p style={{ fontSize: '16px' }}>{entry.roast.sections?.translation}</p>
                     </div>
 
-                    <div className="mb-3">
-                      <p className="text-cyan-300 text-sm italic">
-                        {entry.roast.sections.translation}
-                      </p>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <p className="text-yellow-300 text-xs">
-                        Score: {entry.score}
-                      </p>
-                      <a
-                        href={`/roast/${entry.roast.id}`}
-                        className="text-pink-400 hover:text-pink-300 text-sm font-bold"
-                      >
-                        VIEW FULL ROAST →
+                    {/* Footer */}
+                    <div className="flex justify-end mt-4">
+                      <a href={`/roast/${entry.roast.id}`} className="roast-view-btn">
+                        FULL ROAST →
                       </a>
                     </div>
                   </div>
                 </div>
-              </RetroCard>
+              </div>
             );
           })}
         </div>

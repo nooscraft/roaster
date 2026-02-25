@@ -9,7 +9,12 @@ export class LLMProvider {
 
   constructor(apiKey?: string) {
     this.client = new OpenAI({
-      apiKey: apiKey || process.env.OPENAI_API_KEY,
+      apiKey: apiKey || process.env.OPENROUTER_API_KEY,
+      baseURL: 'https://openrouter.ai/api/v1',
+      defaultHeaders: {
+        'HTTP-Referer': process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+        'X-Title': 'AI Bubble Roster',
+      },
     });
   }
 
@@ -24,30 +29,43 @@ export class LLMProvider {
       try {
         const startTime = Date.now();
 
-        const completion = await this.client.beta.chat.completions.parse({
-          model: 'gpt-4o-mini',
+        const completion = await this.client.chat.completions.create({
+          model: 'anthropic/claude-3.5-sonnet',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt },
           ],
-          response_format: zodResponseFormat(roastOutputSchema, 'roast'),
+          response_format: { type: 'json_object' },
           temperature: 0.8,
+          max_tokens: 2000, // Ensure we get the full response
         });
 
         const duration = Date.now() - startTime;
 
-        if (!completion.choices[0]?.message?.parsed) {
-          throw new Error('No parsed response from OpenAI');
+        const content = completion.choices[0]?.message?.content;
+        if (!content) {
+          throw new Error('No response from LLM');
         }
 
-        const result = completion.choices[0].message.parsed;
+        // Parse JSON response and validate with Zod
+        let parsed;
+        try {
+          parsed = JSON.parse(content);
+        } catch (parseError) {
+          console.error('❌ JSON Parse Error:', parseError);
+          console.error('Raw content (first 1000 chars):', content.substring(0, 1000));
+          throw new Error(`Failed to parse JSON: ${parseError}`);
+        }
+
+        // Validate and transform with Zod
+        const result = roastOutputSchema.parse(parsed);
 
         const tokensUsed =
           (completion.usage?.prompt_tokens || 0) +
           (completion.usage?.completion_tokens || 0);
 
         costTracker.trackOpenAITokens(tokensUsed, {
-          model: 'gpt-4o-mini',
+          model: 'anthropic/claude-3.5-sonnet',
           duration,
           attempt,
         });
@@ -87,7 +105,7 @@ export class LLMProvider {
   ): Promise<string> {
     try {
       const completion = await this.client.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'anthropic/claude-3.5-sonnet',
         messages: [
           {
             role: 'system',

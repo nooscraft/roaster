@@ -32,7 +32,8 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
           X_API_DAILY_BUDGET: ${{ secrets.X_API_DAILY_BUDGET }}
           OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
         run: node --loader ts-node/esm worker/jobs/sync-handles.ts

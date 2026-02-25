@@ -10,10 +10,10 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
   const percentage = (clampedScore / 10) * 100;
   
   const getColor = (score: number) => {
-    if (score < 3) return '#FFD23F';
-    if (score < 6) return '#FF8C42';
-    if (score < 8) return '#FF6B35';
-    return '#FF5722';
+    if (score < 3) return '#22c55e'; // green - grounded
+    if (score < 6) return '#F5C518'; // yellow - mild hype
+    if (score < 8) return '#f97316'; // orange - hyped
+    return '#ef4444';               // red - full bubble
   };
 
   const sizeClasses = {
@@ -37,7 +37,7 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
             cy="50"
             r="40"
             fill="none"
-            stroke="rgba(255, 255, 255, 0.1)"
+            stroke="rgba(0,0,0,0.1)"
             strokeWidth="8"
           />
           <circle
@@ -49,9 +49,6 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
             strokeWidth="8"
             strokeDasharray={`${percentage * 2.51} 251`}
             strokeLinecap="round"
-            style={{
-              filter: `drop-shadow(0 0 10px ${getColor(clampedScore)})`,
-            }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
@@ -64,7 +61,7 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
         </div>
       </div>
       <div className="text-center">
-        <div className="text-orange-400 text-xs pixel-font">BUBBLE SCORE</div>
+        <div className="pixel-font" style={{ fontSize: '7px', color: '#888' }}>BUBBLE SCORE</div>
       </div>
     </div>
   );
