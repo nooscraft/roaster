@@ -2,8 +2,9 @@ name: Sync X Posts and Generate Roasts
 
 on:
   schedule:
-    # Run every 30 minutes
-    - cron: '*/30 * * * *'
+    # 10:00 AM Pacific Standard Time = 18:00 UTC
+    # Note: PST is UTC-8. During PDT (summer) this will run at 11:00 AM PT.
+    - cron: '0 18 * * *'
   
   # Allow manual trigger from GitHub UI
   workflow_dispatch:

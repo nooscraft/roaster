@@ -2,8 +2,8 @@ name: Generate Roasts (Separate Job)
 
 on:
   schedule:
-    # Run every hour
-    - cron: '0 * * * *'
+    # 10:15 AM PST (18:15 UTC) — 15 min after sync completes
+    - cron: '15 18 * * *'
   
   workflow_dispatch:
 
