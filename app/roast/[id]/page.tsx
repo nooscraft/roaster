@@ -5,12 +5,13 @@ import { Metadata } from 'next';
 import { CopyButton } from './CopyButton';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
   const roast = await prisma.roast.findUnique({
-    where: { id: params.id, status: 'APPROVED' },
+    where: { id, status: 'APPROVED' },
     include: { post: { include: { source: true } } },
   });
 
@@ -23,8 +24,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function RoastDetailPage({ params }: PageProps) {
+  const { id } = await params;
   const roast = await prisma.roast.findUnique({
-    where: { id: params.id, status: 'APPROVED' },
+    where: { id, status: 'APPROVED' },
     include: { post: { include: { source: true } } },
   });
 
