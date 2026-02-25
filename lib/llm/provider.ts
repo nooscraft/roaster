@@ -13,7 +13,7 @@ export class LLMProvider {
       baseURL: 'https://openrouter.ai/api/v1',
       defaultHeaders: {
         'HTTP-Referer': process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
-        'X-Title': 'AI Bubble Roster',
+        'X-Title': 'Froth',
       },
     });
   }
@@ -30,14 +30,14 @@ export class LLMProvider {
         const startTime = Date.now();
 
         const completion = await this.client.chat.completions.create({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-3.5-haiku',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt },
           ],
           response_format: { type: 'json_object' },
-          temperature: 0.8,
-          max_tokens: 2000, // Ensure we get the full response
+          temperature: 0.9,
+          max_tokens: 2000,
         });
 
         const duration = Date.now() - startTime;
@@ -65,7 +65,7 @@ export class LLMProvider {
           (completion.usage?.completion_tokens || 0);
 
         costTracker.trackOpenAITokens(tokensUsed, {
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-3.5-haiku',
           duration,
           attempt,
         });
@@ -105,7 +105,7 @@ export class LLMProvider {
   ): Promise<string> {
     try {
       const completion = await this.client.chat.completions.create({
-        model: 'anthropic/claude-3.5-sonnet',
+        model: 'meta-llama/llama-3.3-70b-instruct:free',
         messages: [
           {
             role: 'system',

@@ -61,8 +61,6 @@ async function generateRoastsNow() {
         userPrompt
       );
 
-      const status = 'PENDING';
-
       // Create roast (auto-approved)
       await prisma.roast.create({
         data: {
@@ -77,9 +75,12 @@ async function generateRoastsNow() {
         },
       });
 
-      console.log(`   ✅ Roast created (${status})`);
+      console.log(`   ✅ Roast created`);
       console.log(`   📊 Bubble Score: ${roastOutput.bubbleScore}/10`);
       console.log(`   🏷️  Tags: ${roastOutput.tags.join(', ')}`);
+
+      // Small delay to be respectful of rate limits
+      await new Promise(r => setTimeout(r, 1000));
     } catch (error: any) {
       console.error(`   ❌ Failed:`, error.message);
     }

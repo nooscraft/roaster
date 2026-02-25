@@ -43,8 +43,28 @@ const coerceToString = z.preprocess((val) => {
   return String(val ?? '');
 }, z.string());
 
-// Schema that accepts Claude's actual output format
-const rawRoastOutputSchema = z
+// Normalize keys: unwrap { roast: {...} } or { handle, roast } if present; accept snake_case and camelCase
+function normalizeKeys(obj: unknown): Record<string, unknown> {
+  if (typeof obj !== 'object' || obj === null) return {};
+  const raw = obj as Record<string, unknown>;
+  const inner = (raw.roast ?? raw) as Record<string, unknown>;
+  return {
+    bubble_score: inner.bubble_score ?? inner.bubbleScore,
+    archetype: inner.archetype,
+    tags: inner.tags,
+    translation: inner.translation ?? inner.corporate_speak,
+    reality_check:
+      inner.reality_check ??
+      inner.realityCheck ??
+      inner.actual_meaning ??
+      inner.human_translation,
+    score_breakdown: inner.score_breakdown ?? inner.scoreBreakdown,
+    award_candidate: inner.award_candidate ?? inner.awardCandidate,
+  };
+}
+
+// Schema that accepts both snake_case and camelCase from LLM
+const rawRoastOutputSchema = z.preprocess(normalizeKeys, z
   .object({
     bubble_score: z.number().transform((n) => Math.min(10, Math.max(0, n))), // clamp 0-10
     archetype: z.string(),
@@ -54,7 +74,7 @@ const rawRoastOutputSchema = z
     score_breakdown: z.unknown(),
     award_candidate: z.string().optional().nullable(),
   })
-  .passthrough();
+  .passthrough());
 
 // Transform to camelCase + normalize score_breakdown
 export const roastOutputSchema = rawRoastOutputSchema.transform((data) => ({
