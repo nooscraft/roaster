@@ -33,9 +33,9 @@ async function syncNow() {
       // Fetch recent posts
       console.log('  Fetching recent posts...');
       const posts = await xApiClient.getUserTimeline(source.xUserId!, {
-        maxResults: 10,
+        maxResults: 3,
         sinceId: source.sinceId || undefined,
-        excludeRetweets: true, // Don't fetch retweets
+        excludeRetweets: true,
       });
 
       console.log(`  Found ${posts.length} posts`);

@@ -3,8 +3,8 @@ import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 
 export const metadata: Metadata = {
-  title: "AI Bubble Roster - Roasting the Hype",
-  description: "A satirical feed roasting AI corporate hype and buzzword theater",
+  title: "Froth - Measuring the froth in frontier AI",
+  description: "Measuring the froth in frontier AI",
 };
 
 export default function RootLayout({
@@ -29,10 +29,10 @@ export default function RootLayout({
                 <div />
                 <div className="text-center">
                   <h1 className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '18px' }}>
-                    AI BUBBLE ROSTER
+                    FROTH
                   </h1>
                   <p style={{ color: '#888', fontSize: '14px', fontFamily: 'VT323, monospace' }}>
-                    ROASTING THE HYPE SINCE 2026
+                    MEASURING THE FROTH IN FRONTIER AI
                   </p>
                 </div>
                 <div />
@@ -70,10 +70,13 @@ export default function RootLayout({
           <footer style={{ background: '#1a1a1a', borderTop: '4px solid #1a1a1a' }} className="p-6 mt-12">
             <div className="max-w-7xl mx-auto text-center">
               <p className="pixel-font mb-2" style={{ color: '#F5C518', fontSize: '10px' }}>
-                AI BUBBLE ROSTER
+                FROTH
               </p>
               <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '16px' }}>
                 Parody content. Roasting corporate hype, not people.
+              </p>
+              <p style={{ color: '#555', fontFamily: 'VT323, monospace', fontSize: '20px', marginTop: '8px' }}>
+                Made with excessive VC funding, unhinged optimism, and a concerning amount of coffee ☕
               </p>
             </div>
           </footer>

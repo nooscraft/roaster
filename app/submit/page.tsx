@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { RetroCard } from '@/components/retro/RetroCard';
-import { RetroInput } from '@/components/retro/RetroInput';
-import { RetroButton } from '@/components/retro/RetroButton';
 
 export default function SubmitPage() {
   const [handle, setHandle] = useState('');
@@ -14,14 +11,12 @@ export default function SubmitPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-
     try {
       const res = await fetch('/api/submit-handle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ handle, context }),
       });
-
       if (res.ok) {
         setSubmitted(true);
         setHandle('');
@@ -30,7 +25,7 @@ export default function SubmitPage() {
         const error = await res.json();
         alert(`Error: ${error.message}`);
       }
-    } catch (error) {
+    } catch {
       alert('Failed to submit handle');
     } finally {
       setSubmitting(false);
@@ -39,55 +34,65 @@ export default function SubmitPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {/* Title */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl text-yellow-300 pixel-font mb-4 glow-text">
+        <h1 className="pixel-font glow-text mb-2" style={{ fontSize: '18px', color: '#1a1a1a' }}>
           SUBMIT A HANDLE
         </h1>
-        <p className="text-cyan-300 text-lg">
+        <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
           Suggest an X account that deserves the roast treatment
         </p>
       </div>
 
       {submitted ? (
-        <RetroCard variant="cyan">
-          <div className="text-center py-8">
-            <p className="text-green-400 text-2xl mb-4">✓ SUBMISSION RECEIVED</p>
-            <p className="text-cyan-300 mb-6">
-              Thanks for your suggestion! We'll review it and add it to our tracking list if approved.
-            </p>
-            <RetroButton onClick={() => setSubmitted(false)}>
-              SUBMIT ANOTHER
-            </RetroButton>
-          </div>
-        </RetroCard>
+        <div className="retro-card text-center py-10">
+          <p style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '12px', color: '#27ae60', marginBottom: '16px' }}>
+            ✓ SUBMISSION RECEIVED
+          </p>
+          <p style={{ fontFamily: 'VT323, monospace', fontSize: '20px', color: '#555', marginBottom: '24px' }}>
+            Thanks! We'll review and add it to our tracking list if approved.
+          </p>
+          <button className="retro-button" onClick={() => setSubmitted(false)}>
+            SUBMIT ANOTHER
+          </button>
+        </div>
       ) : (
-        <RetroCard variant="pink">
+        <div className="retro-card">
           <form onSubmit={handleSubmit}>
-            <RetroInput
-              label="X Handle *"
-              placeholder="@username"
-              value={handle}
-              onChange={(e) => setHandle(e.target.value)}
-              required
-            />
+            {/* Handle input */}
+            <div className="mb-5">
+              <label className="roast-label">X HANDLE *</label>
+              <input
+                className="retro-input"
+                placeholder="@username"
+                value={handle}
+                onChange={(e) => setHandle(e.target.value)}
+                required
+              />
+            </div>
 
-            <div className="mb-4">
-              <label className="block text-cyan-300 mb-2 pixel-font text-xs">
-                Context (Optional)
-              </label>
+            {/* Context textarea */}
+            <div className="mb-5">
+              <label className="roast-label">CONTEXT (OPTIONAL)</label>
               <textarea
-                className="retro-input w-full h-32"
+                className="retro-input"
+                style={{ height: '120px', resize: 'vertical' }}
                 placeholder="Why should we track this handle? Any specific patterns or themes?"
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
               />
             </div>
 
-            <div className="mb-6 p-4 bg-black/30 border-2 border-yellow-400">
-              <p className="text-yellow-300 text-sm pixel-font mb-2">
-                ⚠ GUIDELINES
-              </p>
-              <ul className="text-cyan-300 text-sm space-y-1">
+            {/* Guidelines */}
+            <div style={{
+              background: '#F2ECD8',
+              border: '2px solid #1a1a1a',
+              borderLeft: '5px solid #F5C518',
+              padding: '14px 16px',
+              marginBottom: '24px',
+            }}>
+              <p className="roast-label mb-2">⚠ GUIDELINES</p>
+              <ul style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#555', lineHeight: '1.6' }}>
                 <li>• We roast corporate hype and buzzword theater, not individuals</li>
                 <li>• Suggested handles should be public accounts</li>
                 <li>• Focus on AI/tech companies and thought leaders</li>
@@ -96,12 +101,17 @@ export default function SubmitPage() {
             </div>
 
             <div className="flex justify-center">
-              <RetroButton type="submit" disabled={submitting || !handle.trim()}>
+              <button
+                type="submit"
+                className="retro-button"
+                disabled={submitting || !handle.trim()}
+                style={{ opacity: submitting || !handle.trim() ? 0.5 : 1 }}
+              >
                 {submitting ? 'SUBMITTING...' : 'SUBMIT HANDLE'}
-              </RetroButton>
+              </button>
             </div>
           </form>
-        </RetroCard>
+        </div>
       )}
     </div>
   );

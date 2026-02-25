@@ -21,6 +21,13 @@ export async function generateRoastJob(postId: string) {
       return;
     }
 
+    // Skip if already roasted
+    const existing = await prisma.roast.findUnique({ where: { postId } });
+    if (existing) {
+      logger.info('Post already roasted, skipping', { postId });
+      return;
+    }
+
     const isOptedOut = await checkOptOut(
       post.source.handle,
       post.url,

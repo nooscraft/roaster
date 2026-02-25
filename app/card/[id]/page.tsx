@@ -30,7 +30,7 @@ export default async function CardPage({ params }: PageProps) {
       <div className="w-full h-full border-4 border-cyan-400 bg-purple-900/80 p-8 flex flex-col justify-between">
         <div>
           <h1 className="pixel-font text-4xl text-yellow-300 text-center mb-4 glow-text">
-            AI BUBBLE ROSTER
+            FROTH
           </h1>
           <div className="flex justify-center mb-6">
             <BubbleScoreMeter score={roast.bubbleScore} size="md" />
@@ -54,7 +54,7 @@ export default async function CardPage({ params }: PageProps) {
 
         <div className="text-center">
           <p className="text-cyan-300 text-sm">
-            aibubbleroster.com
+            froth.wtf
           </p>
         </div>
       </div>

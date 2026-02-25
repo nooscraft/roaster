@@ -56,6 +56,12 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
+    // Shuffle so different handles are interleaved (Fisher-Yates)
+    for (let i = roasts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [roasts[i], roasts[j]] = [roasts[j], roasts[i]];
+    }
+
     const total = await prisma.roast.count({ where });
 
     return NextResponse.json({
