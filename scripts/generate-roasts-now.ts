@@ -16,10 +16,11 @@ async function generateRoastsNow() {
     process.exit(1);
   }
 
-  // Get posts without roasts
+  // Get posts without roasts, ordered by account to ensure diversity
   const posts = await prisma.post.findMany({
     where: { roast: null },
-    take: 10,
+    take: 50,
+    orderBy: [{ sourceId: 'asc' }, { publishedAt: 'desc' }],
     include: { source: true },
   });
 
@@ -103,7 +104,9 @@ async function generateRoastsNow() {
   await prisma.$disconnect();
 }
 
-generateRoastsNow().catch((error) => {
-  console.error('Fatal error:', error);
-  process.exit(1);
-});
+generateRoastsNow()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });

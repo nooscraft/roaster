@@ -136,7 +136,7 @@ export class XAPIClient {
   ): Promise<XPost[]> {
     try {
       const params = new URLSearchParams({
-        max_results: (options.maxResults || 10).toString(),
+        max_results: Math.max(5, Math.min(100, options.maxResults || 10)).toString(),
         'tweet.fields': 'created_at,public_metrics,referenced_tweets,lang',
       });
 

@@ -37,7 +37,7 @@ async function syncNow() {
       // Fetch recent posts
       console.log('  Fetching recent posts...');
       const posts = await xApiClient.getUserTimeline(source.xUserId!, {
-        maxResults: 3,
+        maxResults: 5,
         sinceId: source.sinceId || undefined,
         excludeRetweets: true,
       });
@@ -114,7 +114,9 @@ async function syncNow() {
   await prisma.$disconnect();
 }
 
-syncNow().catch((error) => {
-  console.error('Fatal error:', error);
-  process.exit(1);
-});
+syncNow()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });

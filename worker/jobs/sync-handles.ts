@@ -70,7 +70,7 @@ async function syncSource(source: any) {
   }
 
   const posts = await xApiClient.getUserTimeline(source.xUserId, {
-    maxResults: 3,
+    maxResults: 5,
     sinceId: source.sinceId || undefined,
     excludeRetweets: true,
   });
