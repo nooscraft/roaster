@@ -25,7 +25,7 @@ export default function AdminLayout({
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       <aside className="md:col-span-1">
-        <RetroCard variant="pink" className="sticky top-4">
+        <RetroCard variant="coral" className="sticky top-4">
           <h2 className="pixel-font text-yellow-300 text-sm mb-4 text-center glow-text">
             ADMIN PANEL
           </h2>

@@ -9,14 +9,14 @@ export default function AdminDashboard() {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <div className="text-center">
             <p className="text-pink-400 text-4xl font-bold mb-2">0</p>
             <p className="text-cyan-300 text-sm">Total Posts</p>
           </div>
         </RetroCard>
 
-        <RetroCard variant="pink">
+        <RetroCard variant="coral">
           <div className="text-center">
             <p className="text-yellow-300 text-4xl font-bold mb-2">0</p>
             <p className="text-cyan-300 text-sm">Total Roasts</p>
@@ -30,7 +30,7 @@ export default function AdminDashboard() {
           </div>
         </RetroCard>
 
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <div className="text-center">
             <p className="text-red-500 text-4xl font-bold mb-2">0</p>
             <p className="text-cyan-300 text-sm">Reports</p>
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
         </RetroCard>
       </div>
 
-      <RetroCard variant="pink" className="mb-6">
+      <RetroCard variant="coral" className="mb-6">
         <h2 className="text-yellow-300 font-bold text-xl mb-4">
           📡 System Status
         </h2>
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
         </div>
       </RetroCard>
 
-      <RetroCard variant="cyan">
+      <RetroCard variant="yellow">
         <h2 className="text-yellow-300 font-bold text-xl mb-4">
           🎯 Quick Actions
         </h2>

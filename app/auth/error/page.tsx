@@ -19,7 +19,7 @@ function ErrorContent() {
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
-      <RetroCard variant="pink" className="max-w-md w-full">
+      <RetroCard variant="coral" className="max-w-md w-full">
         <h1 className="pixel-font text-2xl text-red-500 text-center mb-6 glow-text">
           ACCESS DENIED
         </h1>

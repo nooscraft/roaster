@@ -61,7 +61,7 @@ export default function PromptsPage() {
         PROMPT MANAGEMENT
       </h1>
 
-      <RetroCard variant="pink" className="mb-6">
+      <RetroCard variant="coral" className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-yellow-300 font-bold text-xl">
             💬 Prompt Versions ({prompts.length})
@@ -110,7 +110,7 @@ export default function PromptsPage() {
       </RetroCard>
 
       {loading ? (
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <p className="text-cyan-300 text-center py-8">Loading...</p>
         </RetroCard>
       ) : (

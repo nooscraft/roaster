@@ -128,7 +128,7 @@ export default function HandlesPage() {
         HANDLE MANAGEMENT
       </h1>
 
-      <RetroCard variant="pink" className="mb-6">
+      <RetroCard variant="coral" className="mb-6">
         <h2 className="text-yellow-300 font-bold text-xl mb-4">
           ➕ Add New Handle
         </h2>
@@ -145,7 +145,7 @@ export default function HandlesPage() {
         </form>
       </RetroCard>
 
-      <RetroCard variant="cyan">
+      <RetroCard variant="yellow">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-yellow-300 font-bold text-xl">
             📋 Handles ({filteredSources.length})

@@ -95,17 +95,17 @@ export default function ReportsPage() {
       </div>
 
       {loading ? (
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <p className="text-cyan-300 text-center py-8">Loading...</p>
         </RetroCard>
       ) : reports.length === 0 ? (
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <p className="text-cyan-300 text-center py-8">No reports found</p>
         </RetroCard>
       ) : (
         <div className="space-y-4">
           {reports.map((report) => (
-            <RetroCard key={report.id} variant="pink">
+            <RetroCard key={report.id} variant="coral">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="md:col-span-2">
                   <div className="flex items-center gap-2 mb-2">

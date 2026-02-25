@@ -84,7 +84,7 @@ export default function OptOutsPage() {
         OPT-OUT MANAGEMENT
       </h1>
 
-      <RetroCard variant="pink" className="mb-6">
+      <RetroCard variant="coral" className="mb-6">
         <h2 className="text-yellow-300 font-bold text-xl mb-4">
           ➕ Add Opt-Out Entry
         </h2>
@@ -122,7 +122,7 @@ export default function OptOutsPage() {
         </form>
       </RetroCard>
 
-      <RetroCard variant="cyan">
+      <RetroCard variant="yellow">
         <h2 className="text-yellow-300 font-bold text-xl mb-4">
           📋 Opt-Out List ({optOuts.length})
         </h2>

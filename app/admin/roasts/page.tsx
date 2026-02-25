@@ -111,17 +111,17 @@ export default function RoastsPage() {
       </div>
 
       {loading ? (
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <p className="text-cyan-300 text-center py-8">Loading...</p>
         </RetroCard>
       ) : roasts.length === 0 ? (
-        <RetroCard variant="cyan">
+        <RetroCard variant="yellow">
           <p className="text-cyan-300 text-center py-8">No roasts found</p>
         </RetroCard>
       ) : (
         <div className="grid gap-6">
           {roasts.map((roast) => (
-            <RetroCard key={roast.id} variant="cyan">
+            <RetroCard key={roast.id} variant="yellow">
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="md:col-span-1 flex justify-center items-start">
                   <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
@@ -199,7 +199,7 @@ export default function RoastsPage() {
           onClick={() => setSelectedRoast(null)}
         >
           <RetroCard
-            variant="pink"
+            variant="coral"
             className="max-w-3xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
