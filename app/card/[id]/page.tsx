@@ -3,12 +3,13 @@ import { prisma } from '@/lib/prisma';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function CardPage({ params }: PageProps) {
+  const { id } = await params;
   const roast = await prisma.roast.findUnique({
-    where: { id: params.id, status: 'APPROVED' },
+    where: { id, status: 'APPROVED' },
     include: {
       post: {
         include: { source: true },
@@ -45,10 +46,10 @@ export default async function CardPage({ params }: PageProps) {
             @{roast.post.source.handle}
           </h3>
           <p className="text-white text-xl text-center italic mb-4">
-            "{roast.sections.translation}"
+            "{(roast.sections as any)?.translation}"
           </p>
           <p className="text-yellow-300 text-lg text-center">
-            {roast.sections.realityCheck}
+            {(roast.sections as any)?.realityCheck}
           </p>
         </div>
 

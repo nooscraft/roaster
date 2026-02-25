@@ -23,6 +23,10 @@ async function syncNow() {
       if (!source.xUserId) {
         console.log('  Resolving X user ID...');
         const user = await xApiClient.getUserByUsername(source.handle);
+        if (!user) {
+          console.log(`  ⚠️ Could not resolve user ID for @${source.handle}, skipping`);
+          continue;
+        }
         await prisma.source.update({
           where: { id: source.id },
           data: { xUserId: user.id },
