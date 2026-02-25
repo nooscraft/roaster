@@ -4,9 +4,10 @@ interface RetroCardProps {
   children: ReactNode;
   className?: string;
   variant?: 'orange' | 'yellow' | 'coral';
+  onClick?: (e: React.MouseEvent) => void;
 }
 
-export function RetroCard({ children, className = '', variant = 'orange' }: RetroCardProps) {
+export function RetroCard({ children, className = '', variant = 'orange', onClick }: RetroCardProps) {
   const borderClass = {
     orange: 'retro-border',
     coral: 'retro-border-orange',
@@ -14,7 +15,7 @@ export function RetroCard({ children, className = '', variant = 'orange' }: Retr
   }[variant];
 
   return (
-    <div className={`retro-card ${borderClass} ${className}`}>
+    <div className={`retro-card ${borderClass} ${className}`} onClick={onClick}>
       {children}
     </div>
   );
