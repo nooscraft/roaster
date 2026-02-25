@@ -116,7 +116,7 @@ export default function PromptsPage() {
       ) : (
         <div className="space-y-4">
           {prompts.map((prompt) => (
-            <RetroCard key={prompt.id} variant={prompt.isActive ? 'pink' : 'cyan'}>
+            <RetroCard key={prompt.id} variant={prompt.isActive ? 'coral' : 'yellow'}>
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-pink-400 font-bold text-xl mb-2">
