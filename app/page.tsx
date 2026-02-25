@@ -54,10 +54,10 @@ export default function Home() {
       {/* Title */}
       <div className="text-center mb-8">
         <h2 className="pixel-font glow-text mb-2" style={{ fontSize: '20px', color: '#1a1a1a' }}>
-          LATEST ROASTS
+          FRESHLY FROTH'D
         </h2>
         <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
-          The freshest takes on AI corporate hype
+          Because someone has to hold the buzzword bucket — one post at a time
         </p>
       </div>
 

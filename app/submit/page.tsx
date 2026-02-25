@@ -40,7 +40,7 @@ export default function SubmitPage() {
           SUBMIT A HANDLE
         </h1>
         <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
-          Suggest an X account that deserves the roast treatment
+          Know a founder who thinks they're disrupting gravity? Drop the handle. We'll handle the rest.
         </p>
       </div>
 
@@ -50,10 +50,10 @@ export default function SubmitPage() {
             ✓ SUBMISSION RECEIVED
           </p>
           <p style={{ fontFamily: 'VT323, monospace', fontSize: '20px', color: '#555', marginBottom: '24px' }}>
-            Thanks! We'll review and add it to our tracking list if approved.
+            Noted. Our roast algorithms are already rubbing their hands together. If it passes the vibe check, they're getting froth'd.
           </p>
           <button className="retro-button" onClick={() => setSubmitted(false)}>
-            SUBMIT ANOTHER
+            FEED US ANOTHER
           </button>
         </div>
       ) : (
@@ -73,11 +73,11 @@ export default function SubmitPage() {
 
             {/* Context textarea */}
             <div className="mb-5">
-              <label className="roast-label">CONTEXT (OPTIONAL)</label>
+              <label className="roast-label">WHY DO THEY DESERVE THIS? (OPTIONAL)</label>
               <textarea
                 className="retro-input"
                 style={{ height: '120px', resize: 'vertical' }}
-                placeholder="Why should we track this handle? Any specific patterns or themes?"
+                placeholder="Did they just post about 'leveraging AI synergies to 10x their paradigm shift'? Tell us everything."
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
               />
@@ -91,12 +91,12 @@ export default function SubmitPage() {
               padding: '14px 16px',
               marginBottom: '24px',
             }}>
-              <p className="roast-label mb-2">⚠ GUIDELINES</p>
+              <p className="roast-label mb-2">⚠ THE FINE PRINT</p>
               <ul style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#555', lineHeight: '1.6' }}>
-                <li>• We roast corporate hype and buzzword theater, not individuals</li>
-                <li>• Suggested handles should be public accounts</li>
-                <li>• Focus on AI/tech companies and thought leaders</li>
-                <li>• No harassment or personal attacks</li>
+                <li>• We roast the hype, not the human — buzzword theater only</li>
+                <li>• Must be a public account (we're not stalkers)</li>
+                <li>• Bonus points for AI founders who've said "AGI by next Tuesday"</li>
+                <li>• No witch hunts — we're satirists, not supervillains</li>
               </ul>
             </div>
 
@@ -107,7 +107,7 @@ export default function SubmitPage() {
                 disabled={submitting || !handle.trim()}
                 style={{ opacity: submitting || !handle.trim() ? 0.5 : 1 }}
               >
-                {submitting ? 'SUBMITTING...' : 'SUBMIT HANDLE'}
+                {submitting ? 'LOADING THE ROAST CANNON...' : 'NOMINATE FOR FROTH'}
               </button>
             </div>
           </form>
