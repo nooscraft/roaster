@@ -1,0 +1,43 @@
+name: Sync X Posts and Generate Roasts
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  sync-and-roast:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      
+      - name: Run sync job
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          X_API_DAILY_BUDGET: ${{ secrets.X_API_DAILY_BUDGET }}
+          OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
+        run: node --loader ts-node/esm worker/jobs/sync-handles.ts
+      
+      - name: Summary
+        run: |
+          echo "✅ Sync completed successfully"
+          echo "Check logs above for details"

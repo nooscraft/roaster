@@ -1,0 +1,20 @@
+{
+  "name": "roster-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "tsx worker/index.ts",
+    "build": "tsc",
+    "dev": "tsx watch worker/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "pino": "latest",
+    "openai": "latest",
+    "playwright": "latest"
+  },
+  "devDependencies": {
+    "tsx": "latest",
+    "typescript": "^5"
+  }
+}

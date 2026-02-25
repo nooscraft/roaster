@@ -1,0 +1,57 @@
+name: Generate Share Card Images
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  
+  workflow_dispatch:
+
+jobs:
+  generate-cards:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright
+        run: npx playwright install chromium
+      
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      
+      - name: Create share-cards directory
+        run: mkdir -p public/share-cards
+      
+      - name: Generate share cards for approved roasts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+        run: |
+          node --loader tsx --no-warnings worker/scripts/generate-cards.ts
+      
+      - name: Commit and push images
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/share-cards/*.png
+          
+          if git diff --staged --quiet; then
+            echo "No new share cards to commit"
+          else
+            git commit -m "🎨 Auto-generate share card images"
+            git push
+            echo "✅ Share cards committed and pushed"
+          fi

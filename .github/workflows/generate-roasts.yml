@@ -1,0 +1,60 @@
+name: Generate Roasts (Separate Job)
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  
+  workflow_dispatch:
+
+jobs:
+  generate-roasts:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      
+      - name: Generate roasts for pending posts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
+        run: |
+          node -e "
+          import('./worker/jobs/generate-roast.ts').then(async (module) => {
+            const { prisma } = await import('./lib/prisma.ts');
+            
+            // Find posts without roasts
+            const posts = await prisma.post.findMany({
+              where: { roasts: { none: {} } },
+              take: 10,
+              include: { source: true }
+            });
+            
+            console.log(\`Found \${posts.length} posts to roast\`);
+            
+            for (const post of posts) {
+              try {
+                await module.generateRoastJob({ postId: post.id });
+                console.log(\`✅ Generated roast for post \${post.id}\`);
+              } catch (error) {
+                console.error(\`❌ Failed to roast post \${post.id}:\`, error);
+              }
+            }
+            
+            await prisma.\$disconnect();
+          });
+          "
