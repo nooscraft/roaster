@@ -1,35 +1,34 @@
-name: Sync X Posts and Generate Roasts
+name: Fetch & Roast Tweets
 
 on:
-  schedule:
-    # 10:00 AM Pacific Standard Time = 18:00 UTC
-    # Note: PST is UTC-8. During PDT (summer) this will run at 11:00 AM PT.
-    - cron: '0 18 * * *'
-  
-  # Allow manual trigger from GitHub UI
+  # Manual trigger from GitHub UI
   workflow_dispatch:
 
+  # Scheduled: 10:00 AM PST daily (UTC-8 = 18:00 UTC)
+  schedule:
+    - cron: '0 18 * * *'
+
 jobs:
-  sync-and-roast:
+  fetch-and-roast:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Generate Prisma Client
         run: npx prisma generate
-      
-      - name: Run sync job
+
+      - name: Sync posts from X
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
@@ -37,9 +36,12 @@ jobs:
           NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
           X_API_DAILY_BUDGET: ${{ secrets.X_API_DAILY_BUDGET }}
           OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
-        run: node --loader ts-node/esm worker/jobs/sync-handles.ts
-      
-      - name: Summary
-        run: |
-          echo "✅ Sync completed successfully"
-          echo "Check logs above for details"
+        run: npx tsx scripts/sync-now.ts
+
+      - name: Generate roasts for new posts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+          OPENAI_DAILY_BUDGET: ${{ secrets.OPENAI_DAILY_BUDGET }}
+        run: npx tsx scripts/generate-roasts-now.ts
