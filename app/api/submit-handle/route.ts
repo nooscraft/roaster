@@ -41,17 +41,17 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.info('Handle submitted for review', {
+    logger.info({
       handle: cleanHandle,
       context,
-    });
+    }, 'Handle submitted for review');
 
     return NextResponse.json({
       message: 'Handle submitted successfully',
       source,
     });
   } catch (error) {
-    logger.error('Failed to submit handle', { error });
+    logger.error({ error }, 'Failed to submit handle');
     return NextResponse.json(
       { error: 'Failed to submit handle' },
       { status: 500 }

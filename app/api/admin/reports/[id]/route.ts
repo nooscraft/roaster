@@ -25,15 +25,15 @@ export async function PATCH(
       },
     });
 
-    logger.info('Report updated', {
+    logger.info({
       reportId: id,
       status,
       reviewedBy: session.user.email,
-    });
+    }, 'Report updated');
 
     return NextResponse.json({ report: updated });
   } catch (error) {
-    logger.error('Failed to update report', { error });
+    logger.error({ error }, 'Failed to update report');
     return NextResponse.json(
       { error: 'Failed to update report' },
       { status: 500 }

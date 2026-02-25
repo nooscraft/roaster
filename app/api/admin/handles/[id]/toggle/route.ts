@@ -29,14 +29,14 @@ export async function POST(
       data: { enabled: !source.enabled },
     });
 
-    logger.info('Handle toggled', {
+    logger.info({
       handle: source.handle,
       enabled: updated.enabled,
-    });
+    }, 'Handle toggled');
 
     return NextResponse.json({ source: updated });
   } catch (error) {
-    logger.error('Failed to toggle handle', { error });
+    logger.error({ error }, 'Failed to toggle handle');
     return NextResponse.json(
       { error: 'Failed to toggle handle' },
       { status: 500 }

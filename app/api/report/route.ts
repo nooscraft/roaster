@@ -33,18 +33,18 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.info('Report submitted', {
+    logger.info({
       reportId: report.id,
       roastId,
       reason,
-    });
+    }, 'Report submitted');
 
     return NextResponse.json({
       message: 'Report submitted successfully',
       report,
     });
   } catch (error) {
-    logger.error('Failed to submit report', { error });
+    logger.error({ error }, 'Failed to submit report');
     return NextResponse.json(
       { error: 'Failed to submit report' },
       { status: 500 }

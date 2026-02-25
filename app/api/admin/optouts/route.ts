@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.info('Opt-out added', { matchType, value });
+    logger.info({ matchType, value }, 'Opt-out added');
 
     return NextResponse.json({ optOut });
   } catch (error) {
-    logger.error('Failed to add opt-out', { error });
+    logger.error({ error }, 'Failed to add opt-out');
     return NextResponse.json(
       { error: 'Failed to add opt-out' },
       { status: 500 }

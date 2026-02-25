@@ -4,7 +4,7 @@ import { logger } from '../../lib/logger';
 const prisma = new PrismaClient();
 
 export async function generateCardJob(roastId: string) {
-  logger.info('Generate card job started', { roastId });
+  logger.info({ roastId }, 'Generate card job started');
   
   try {
     const roast = await prisma.roast.findUnique({
@@ -13,17 +13,17 @@ export async function generateCardJob(roastId: string) {
     });
 
     if (!roast) {
-      logger.warn('Roast not found', { roastId });
+      logger.warn({ roastId }, 'Roast not found');
       return;
     }
 
-    logger.info('Card generation placeholder', {
+    logger.info({
       roastId,
       handle: roast.post.source.handle,
-    });
+    }, 'Card generation placeholder');
 
   } catch (error) {
-    logger.error('Generate card job failed', { roastId, error });
+    logger.error({ roastId, error }, 'Generate card job failed');
     throw error;
   }
 }

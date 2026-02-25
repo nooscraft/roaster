@@ -33,15 +33,15 @@ export async function POST(
       },
     });
 
-    logger.info('Roast approved', {
+    logger.info({
       roastId: id,
       handle: roast.post.source.handle,
       approvedBy: session.user.email,
-    });
+    }, 'Roast approved');
 
     return NextResponse.json({ roast: updated });
   } catch (error) {
-    logger.error('Failed to approve roast', { error });
+    logger.error({ error }, 'Failed to approve roast');
     return NextResponse.json(
       { error: 'Failed to approve roast' },
       { status: 500 }

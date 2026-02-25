@@ -20,11 +20,11 @@ export async function DELETE(
       where: { id },
     });
 
-    logger.info('Opt-out deleted', { id });
+    logger.info({ id }, 'Opt-out deleted');
 
     return NextResponse.json({ message: 'Opt-out deleted' });
   } catch (error) {
-    logger.error('Failed to delete opt-out', { error });
+    logger.error({ error }, 'Failed to delete opt-out');
     return NextResponse.json(
       { error: 'Failed to delete opt-out' },
       { status: 500 }

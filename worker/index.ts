@@ -47,7 +47,7 @@ class Worker {
   private async processJobs() {
     try {
     } catch (error) {
-      logger.error('Error processing jobs', { error });
+      logger.error({ error }, 'Error processing jobs');
     }
   }
 
@@ -71,6 +71,6 @@ process.on('SIGINT', async () => {
 });
 
 worker.start().catch((error) => {
-  logger.error('Worker failed to start', { error });
+  logger.error({ error }, 'Worker failed to start');
   process.exit(1);
 });

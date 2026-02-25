@@ -26,37 +26,37 @@ export async function syncHandlesJob() {
         await syncSource(source);
         totalPostsFetched++;
       } catch (error) {
-        logger.error('Failed to sync source', {
+        logger.error({
           handle: source.handle,
           error,
-        });
+        }, 'Failed to sync source');
         errors.push(`${source.handle}: ${error}`);
       }
     }
 
     const duration = Date.now() - startTime;
-    logger.info('Sync handles job completed', {
+    logger.info({
       duration,
       totalSources: sources.length,
       totalPostsFetched,
       totalNewPosts,
       errors: errors.length,
-    });
+    }, 'Sync handles job completed');
   } catch (error) {
-    logger.error('Sync handles job failed', { error });
+    logger.error({ error }, 'Sync handles job failed');
     throw error;
   }
 }
 
 async function syncSource(source: any) {
-  logger.info('Syncing source', { handle: source.handle });
+  logger.info({ handle: source.handle }, 'Syncing source');
 
   if (!source.xUserId) {
-    logger.info('Resolving X user ID', { handle: source.handle });
+    logger.info({ handle: source.handle }, 'Resolving X user ID');
     const user = await xApiClient.getUserByUsername(source.handle);
     
     if (!user) {
-      logger.warn('Failed to resolve X user', { handle: source.handle });
+      logger.warn({ handle: source.handle }, 'Failed to resolve X user');
       return;
     }
 
@@ -66,7 +66,7 @@ async function syncSource(source: any) {
     });
 
     source.xUserId = user.id;
-    logger.info('X user ID resolved', { handle: source.handle, xUserId: user.id });
+    logger.info({ handle: source.handle, xUserId: user.id }, 'X user ID resolved');
   }
 
   const posts = await xApiClient.getUserTimeline(source.xUserId, {
@@ -75,10 +75,10 @@ async function syncSource(source: any) {
     excludeRetweets: true,
   });
 
-  logger.info('Fetched posts', {
+  logger.info({
     handle: source.handle,
     count: posts.length,
-  });
+  }, 'Fetched posts');
 
   let newPostsCount = 0;
   let latestPostId = source.sinceId;
@@ -120,21 +120,21 @@ async function syncSource(source: any) {
       });
 
       newPostsCount++;
-      logger.info('New post created', {
+      logger.info({
         postId: newPost.id,
         externalId: post.id,
         handle: source.handle,
-      });
+      }, 'New post created');
 
       if (!latestPostId || post.id > latestPostId) {
         latestPostId = post.id;
       }
     } catch (error) {
-      logger.error('Failed to process post', {
+      logger.error({
         postId: post.id,
         handle: source.handle,
         error,
-      });
+      }, 'Failed to process post');
     }
   }
 
@@ -146,10 +146,10 @@ async function syncSource(source: any) {
     },
   });
 
-  logger.info('Source sync completed', {
+  logger.info({
     handle: source.handle,
     newPosts: newPostsCount,
-  });
+  }, 'Source sync completed');
 
   costTracker.trackXApiCredits(2, {
     handle: source.handle,

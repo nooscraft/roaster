@@ -28,11 +28,11 @@ export async function DELETE(
       where: { id },
     });
 
-    logger.info('Handle deleted', { handle: source.handle });
+    logger.info({ handle: source.handle }, 'Handle deleted');
 
     return NextResponse.json({ message: 'Handle deleted' });
   } catch (error) {
-    logger.error('Failed to delete handle', { error });
+    logger.error({ error }, 'Failed to delete handle');
     return NextResponse.json(
       { error: 'Failed to delete handle' },
       { status: 500 }

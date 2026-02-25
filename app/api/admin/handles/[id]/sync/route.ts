@@ -31,14 +31,14 @@ export async function POST(
       );
     }
 
-    logger.info('Sync job requested', { handle: source.handle });
+    logger.info({ handle: source.handle }, 'Sync job requested');
 
     return NextResponse.json({
       message: 'Sync job enqueued',
       jobId: `sync-${id}-${Date.now()}`,
     });
   } catch (error) {
-    logger.error('Failed to trigger sync', { error });
+    logger.error({ error }, 'Failed to trigger sync');
     return NextResponse.json(
       { error: 'Failed to trigger sync' },
       { status: 500 }

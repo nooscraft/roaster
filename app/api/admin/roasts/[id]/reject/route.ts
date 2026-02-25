@@ -33,15 +33,15 @@ export async function POST(
       },
     });
 
-    logger.info('Roast rejected', {
+    logger.info({
       roastId: id,
       handle: roast.post.source.handle,
       rejectedBy: session.user.email,
-    });
+    }, 'Roast rejected');
 
     return NextResponse.json({ roast: updated });
   } catch (error) {
-    logger.error('Failed to reject roast', { error });
+    logger.error({ error }, 'Failed to reject roast');
     return NextResponse.json(
       { error: 'Failed to reject roast' },
       { status: 500 }

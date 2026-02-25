@@ -8,7 +8,7 @@ import { roastOutputSchema } from '../../lib/roast/schema';
 const prisma = new PrismaClient();
 
 export async function generateRoastJob(postId: string) {
-  logger.info('Generate roast job started', { postId });
+  logger.info({ postId }, 'Generate roast job started');
   
   try {
     const post = await prisma.post.findUnique({
@@ -17,14 +17,14 @@ export async function generateRoastJob(postId: string) {
     });
 
     if (!post) {
-      logger.warn('Post not found', { postId });
+      logger.warn({ postId }, 'Post not found');
       return;
     }
 
     // Skip if already roasted
     const existing = await prisma.roast.findUnique({ where: { postId } });
     if (existing) {
-      logger.info('Post already roasted, skipping', { postId });
+      logger.info({ postId }, 'Post already roasted, skipping');
       return;
     }
 
@@ -35,10 +35,10 @@ export async function generateRoastJob(postId: string) {
     );
 
     if (isOptedOut) {
-      logger.info('Post source is opted out, skipping', {
+      logger.info({
         postId,
         handle: post.source.handle,
-      });
+      }, 'Post source is opted out, skipping');
       return;
     }
 
@@ -53,11 +53,11 @@ export async function generateRoastJob(postId: string) {
     }
 
     const baseScoreResult = calculateBaseScore(post.textExcerpt);
-    logger.info('Base bubble score calculated', {
+    logger.info({
       postId,
       baseScore: baseScoreResult.score,
       reasoning: baseScoreResult.reasoning,
-    });
+    }, 'Base bubble score calculated');
 
     const userPrompt = promptVersion.userPromptTemplate
       .replace('{{handle}}', post.source.handle)
@@ -83,19 +83,19 @@ export async function generateRoastJob(postId: string) {
     let safetyCheck = await checkSafety(allContent, post.source.handle);
 
     if (!safetyCheck.safe) {
-      logger.warn('Roast failed safety check, attempting rewrite', {
+      logger.warn({
         postId,
         violations: safetyCheck.violations,
-      });
+      }, 'Roast failed safety check, attempting rewrite');
 
       const rewritten = await rewriteToComply(allContent, safetyCheck.violations);
       safetyCheck = await checkSafety(rewritten, post.source.handle);
 
       if (!safetyCheck.safe) {
-        logger.error('Roast failed safety check after rewrite', {
+        logger.error({
           postId,
           violations: safetyCheck.violations,
-        });
+        }, 'Roast failed safety check after rewrite');
 
         await prisma.roast.create({
           data: {
@@ -136,15 +136,15 @@ export async function generateRoastJob(postId: string) {
       },
     });
 
-    logger.info('Roast created successfully', {
+    logger.info({
       roastId: roast.id,
       postId,
       status: roast.status,
       bubbleScore: roast.bubbleScore,
-    });
+    }, 'Roast created successfully');
 
   } catch (error) {
-    logger.error('Generate roast job failed', { postId, error });
+    logger.error({ postId, error }, 'Generate roast job failed');
     throw error;
   }
 }

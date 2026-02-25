@@ -26,15 +26,15 @@ export async function POST(
       data: { isActive: true },
     });
 
-    logger.info('Prompt version activated', {
+    logger.info({
       promptId: id,
       name: updated.name,
       activatedBy: session.user.email,
-    });
+    }, 'Prompt version activated');
 
     return NextResponse.json({ prompt: updated });
   } catch (error) {
-    logger.error('Failed to activate prompt', { error });
+    logger.error({ error }, 'Failed to activate prompt');
     return NextResponse.json(
       { error: 'Failed to activate prompt' },
       { status: 500 }

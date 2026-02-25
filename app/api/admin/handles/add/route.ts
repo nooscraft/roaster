@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         xUserId = user.id;
       }
     } catch (error) {
-      logger.warn('Failed to resolve X user ID', { handle: cleanHandle, error });
+      logger.warn({ handle: cleanHandle, error }, 'Failed to resolve X user ID');
     }
 
     const source = await prisma.source.create({
@@ -57,11 +57,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.info('Handle added', { handle: cleanHandle, xUserId });
+    logger.info({ handle: cleanHandle, xUserId }, 'Handle added');
 
     return NextResponse.json({ source });
   } catch (error) {
-    logger.error('Failed to add handle', { error });
+    logger.error({ error }, 'Failed to add handle');
     return NextResponse.json(
       { error: 'Failed to add handle' },
       { status: 500 }
