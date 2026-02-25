@@ -31,6 +31,7 @@ async function syncNow() {
           where: { id: source.id },
           data: { xUserId: user.id },
         });
+        source.xUserId = user.id; // update in-memory object too
         console.log(`  ✅ User ID: ${user.id}`);
       }
 
