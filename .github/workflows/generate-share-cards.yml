@@ -10,7 +10,9 @@ on:
 jobs:
   generate-cards:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write  # Required to push commits
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
