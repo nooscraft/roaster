@@ -135,28 +135,25 @@ body {
   color: var(--black);
 }
 
+/* MORE / View roast button — dark block with solid shadow, pixel font */
 .roast-view-btn {
   font-family: "Press Start 2P", cursive;
-  font-size: 9px;
-  background: var(--black);
-  color: var(--white);
-  padding: 6px 12px;
+  font-size: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  padding: 10px 20px;
+  min-width: 96px;
   text-decoration: none;
   display: inline-block;
-  border: 2px solid var(--black);
-  box-shadow: 2px 2px 0 var(--gray);
+  box-shadow: 3px 3px 0 #505050;
   transition: all 0.1s;
 }
 
 .roast-view-btn:hover {
   background: var(--yellow);
   color: var(--black);
-}
-
-.roast-more-btn {
-  font-size: 15px;
-  padding: 10px 20px;
-  min-width: 96px;
 }
 
 @keyframes roast-spin {

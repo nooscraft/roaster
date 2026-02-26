@@ -115,11 +115,10 @@ export function RoastCard({ roast }: RoastCardProps) {
             router.push(`/roast/${roast.id}`);
           }}
           disabled={isNavigating}
-          className="roast-view-btn roast-more-btn"
+          className="roast-view-btn"
           style={{
             border: 'none',
             cursor: isNavigating ? 'wait' : 'pointer',
-            fontFamily: 'inherit',
           }}
         >
           {isNavigating ? (
