@@ -80,7 +80,7 @@ export default function Home() {
     <div>
       {/* Title */}
       <div className="text-center mb-8">
-        <h2 className="pixel-font glow-text mb-2" style={{ fontSize: '20px', color: '#1a1a1a' }}>
+        <h2 className="pixel-font glow-text mb-2" style={{ fontSize: '18px', color: '#1a1a1a' }}>
           FRESHLY FROTH'D
         </h2>
         <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>

@@ -28,10 +28,10 @@ export default function RootLayout({
               <div className="flex items-center justify-between">
                 <div />
                 <div className="text-center">
-                  <h1 className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '18px' }}>
+                  <h1 className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '37px' }}>
                     FROTH
                   </h1>
-                  <p style={{ color: '#888', fontSize: '14px', fontFamily: 'VT323, monospace' }}>
+                  <p style={{ color: '#888', fontSize: '16px', fontFamily: 'VT323, monospace' }}>
                     MEASURING THE FROTH IN FRONTIER AI
                   </p>
                 </div>

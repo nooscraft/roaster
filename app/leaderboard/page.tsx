@@ -37,7 +37,7 @@ export default function LeaderboardPage() {
           WEEKLY LEADERBOARD
         </h1>
         <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
-          This week's most notable achievements in AI hype
+          Who said the most with the least this week
         </p>
       </div>
 
