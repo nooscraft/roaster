@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Froth - Measuring the froth in frontier AI",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
       </head>
       <body style={{ backgroundColor: '#F2ECD8' }}>
+        <GoogleAnalytics />
         <SessionProvider>
         <div className="retro-container">
           {/* Header */}
