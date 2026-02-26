@@ -40,6 +40,7 @@ async function syncNow() {
       const posts = await xApiClient.getUserTimeline(source.xUserId!, {
         maxResults: 5,
         sinceId: source.sinceId || undefined,
+        excludeReplies: true,
         excludeRetweets: true,
       });
 
@@ -47,8 +48,8 @@ async function syncNow() {
 
       let newPosts = 0;
       for (const post of posts) {
-        // Skip reposts/retweets
-        if (shouldSkipPost(post)) {
+        // Skip replies and reposts (client-side filter before DB insert — no LLM cost for replies)
+        if (shouldSkipPost(post, { skipReplies: true, skipReposts: true })) {
           continue;
         }
 

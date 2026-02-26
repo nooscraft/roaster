@@ -20,8 +20,34 @@ interface Roast {
   };
 }
 
+function formatRoastTime(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+}
+
+function formatLastRoastLine(iso: string): string {
+  const d = new Date(iso);
+  const diffHours = (Date.now() - d.getTime()) / 3600000;
+  const timeStr = formatRoastTime(iso);
+  const suffix = ' — from the LLM (Largely Luck-based Math)';
+  if (diffHours < 2) {
+    return `Last roast fresh out of the oven ${timeStr} — still warm${suffix}`;
+  }
+  return `Last roast batch ${timeStr}${suffix}`;
+}
+
 export default function Home() {
   const [roasts, setRoasts] = useState<Roast[]>([]);
+  const [newestApprovedAt, setNewestApprovedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [handleFilter, setHandleFilter] = useState('');
   const [minScore, setMinScore] = useState(0);
@@ -42,6 +68,7 @@ export default function Home() {
       const res = await fetch(`/api/feed?${params}`);
       const data = await res.json();
       setRoasts(data.roasts || []);
+      setNewestApprovedAt(data.newestApprovedAt || null);
     } catch (error) {
       console.error('Failed to fetch roasts:', error);
     } finally {
@@ -59,6 +86,11 @@ export default function Home() {
         <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
           Because someone has to hold the buzzword bucket — one post at a time
         </p>
+        {newestApprovedAt && (
+          <p style={{ color: '#666', fontFamily: 'VT323, monospace', fontSize: '16px', marginTop: '8px' }}>
+            {formatLastRoastLine(newestApprovedAt)}
+          </p>
+        )}
       </div>
 
       {/* Filters */}

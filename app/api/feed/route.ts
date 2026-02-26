@@ -64,8 +64,17 @@ export async function GET(request: NextRequest) {
 
     const total = await prisma.roast.count({ where });
 
+    // Global most recent roast approved time (for "last baked" display)
+    const newest = await prisma.roast.findFirst({
+      where: { status: 'APPROVED', approvedAt: { not: null } },
+      orderBy: { approvedAt: 'desc' },
+      select: { approvedAt: true },
+    });
+    const newestApprovedAt = newest?.approvedAt?.toISOString() ?? null;
+
     return NextResponse.json({
       roasts,
+      newestApprovedAt,
       pagination: {
         page,
         limit,

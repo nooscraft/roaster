@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { BubbleScoreMeter } from './retro/BubbleScoreMeter';
 
 interface RoastCardProps {
@@ -19,16 +23,38 @@ interface RoastCardProps {
 }
 
 export function RoastCard({ roast }: RoastCardProps) {
+  const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
   const handle = roast.post.source.handle;
   const xProfileUrl = `https://x.com/${handle}`;
+  const tweetUrl = roast.post.url;
 
   return (
     <div className="roast-card" style={{ fontSize: '14px' }}>
       {/* Handle + Score row */}
-      <div className="flex justify-between items-center mb-3">
-        <a href={xProfileUrl} target="_blank" rel="noopener noreferrer" className="roast-handle">
-          @{handle}
-        </a>
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <a href={xProfileUrl} target="_blank" rel="noopener noreferrer" className="roast-handle">
+            @{handle}
+          </a>
+          {tweetUrl && (
+            <a
+              href={tweetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'block',
+                fontSize: '14px',
+                color: '#1a1a1a',
+                fontFamily: 'VT323, monospace',
+                textDecoration: 'underline',
+                marginTop: '6px',
+              }}
+            >
+              View original post ↗
+            </a>
+          )}
+        </div>
         <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
       </div>
 
@@ -42,7 +68,7 @@ export function RoastCard({ roast }: RoastCardProps) {
         {roast.archetype}
       </p>
 
-      {/* Original tweet */}
+      {/* Original post */}
       {roast.post.textExcerpt && (
         <div style={{
           background: '#f9f9f9',
@@ -78,11 +104,42 @@ export function RoastCard({ roast }: RoastCardProps) {
       </div>
 
       {/* Footer */}
-      <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-black">
+      <div className="flex flex-wrap justify-between items-center gap-2 mt-3 pt-3 border-t-2 border-black">
         <span style={{ fontSize: '12px', color: '#888', fontFamily: 'VT323, monospace' }}>
           {new Date(roast.post.publishedAt).toLocaleDateString()}
         </span>
-        <a href={`/roast/${roast.id}`} className="roast-view-btn">MORE →</a>
+        <button
+          type="button"
+          onClick={() => {
+            setIsNavigating(true);
+            router.push(`/roast/${roast.id}`);
+          }}
+          disabled={isNavigating}
+          className="roast-view-btn roast-more-btn"
+          style={{
+            border: 'none',
+            cursor: isNavigating ? 'wait' : 'pointer',
+            fontFamily: 'inherit',
+          }}
+        >
+          {isNavigating ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  border: '2px solid currentColor',
+                  borderTopColor: 'transparent',
+                  borderRadius: '50%',
+                  animation: 'roast-spin 0.6s linear infinite',
+                }}
+              />
+              LOADING
+            </span>
+          ) : (
+            'MORE →'
+          )}
+        </button>
       </div>
     </div>
   );

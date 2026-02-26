@@ -37,7 +37,7 @@ interface XTimelineResponse {
 
 export class XAPIClient {
   private bearerToken: string;
-  private baseUrl = 'https://api.twitter.com/2';
+  private baseUrl = 'https://api.x.com/2';
 
   constructor(bearerToken?: string) {
     this.bearerToken = bearerToken || process.env.X_BEARER_TOKEN || '';
@@ -135,23 +135,16 @@ export class XAPIClient {
     } = {}
   ): Promise<XPost[]> {
     try {
+      // Exclude replies and retweets — original posts only
+      // GET https://api.x.com/2/users/:id/tweets?exclude=replies,retweets
       const params = new URLSearchParams({
         max_results: Math.max(5, Math.min(100, options.maxResults || 10)).toString(),
+        exclude: 'replies,retweets',
         'tweet.fields': 'created_at,public_metrics,referenced_tweets,lang',
       });
 
-      // Only add exclude parameter if there's something to exclude
-      const excludeItems = [
-        options.excludeReplies ? 'replies' : '',
-        options.excludeRetweets ? 'retweets' : '',
-      ].filter(Boolean);
-      
-      if (excludeItems.length > 0) {
-        params.append('exclude', excludeItems.join(','));
-      }
-
       if (options.sinceId) {
-        params.append('since_id', options.sinceId);
+        params.set('since_id', options.sinceId);
       }
 
       const response = await this.request<XTimelineResponse>(

@@ -72,6 +72,7 @@ async function syncSource(source: any) {
   const posts = await xApiClient.getUserTimeline(source.xUserId, {
     maxResults: 5,
     sinceId: source.sinceId || undefined,
+    excludeReplies: true,
     excludeRetweets: true,
   });
 
@@ -85,8 +86,8 @@ async function syncSource(source: any) {
 
   for (const post of posts) {
     try {
-      if (shouldSkipPost(post, { skipReposts: true })) {
-        logger.debug('Skipping post', { postId: post.id, reason: 'repost' });
+      if (shouldSkipPost(post, { skipReplies: true, skipReposts: true })) {
+        logger.debug('Skipping post', { postId: post.id, reason: 'reply or repost' });
         continue;
       }
 

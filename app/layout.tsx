@@ -75,8 +75,8 @@ export default function RootLayout({
               <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '16px' }}>
                 Parody content. Roasting corporate hype, not people.
               </p>
-              <p style={{ color: '#555', fontFamily: 'VT323, monospace', fontSize: '20px', marginTop: '8px' }}>
-                Made with excessive VC funding, unhinged optimism, and a concerning amount of coffee ☕
+              <p style={{ color: '#f5c518', fontFamily: 'VT323, monospace', fontSize: '12px', marginTop: '8px' }}>
+                Made with reckless VC money, delusional optimism, and absolutely zero adult supervision 🚀
               </p>
             </div>
           </footer>

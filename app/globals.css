@@ -153,6 +153,16 @@ body {
   color: var(--black);
 }
 
+.roast-more-btn {
+  font-size: 15px;
+  padding: 10px 20px;
+  min-width: 96px;
+}
+
+@keyframes roast-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ── Buttons ── */
 .retro-button {
   background: var(--yellow);
