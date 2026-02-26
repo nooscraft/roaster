@@ -20,8 +20,13 @@ Before deploying, ensure you have:
 ## Step 1: Database Setup (Neon)
 
 1. Go to https://neon.tech and create a new project
-2. Copy the connection string (should look like `postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`)
-3. Run migrations:
+2. In the Neon dashboard, you'll see two connection strings:
+   - **Pooled** (recommended for serverless): `ep-xxx-pooler.region.aws.neon.tech` port **6543** — use for `DATABASE_URL`
+   - **Direct**: `ep-xxx.region.aws.neon.tech` port **5432** — use for `DIRECT_URL` (migrations)
+3. Set in `.env` / Vercel:
+   - `DATABASE_URL` = pooled connection string (faster for serverless, avoids cold-start overhead)
+   - `DIRECT_URL` = direct connection string (required for `prisma migrate`)
+4. Run migrations:
 ```bash
 DATABASE_URL="your-connection-string" npx prisma migrate deploy
 ```
@@ -56,7 +61,8 @@ openssl rand -base64 32
 
 3. Configure environment variables in Vercel:
 ```
-DATABASE_URL=postgresql://...
+DATABASE_URL=postgresql://...@ep-xxx-pooler.region.aws.neon.tech/neondb?sslmode=require
+DIRECT_URL=postgresql://...@ep-xxx.region.aws.neon.tech/neondb?sslmode=require
 OPENAI_API_KEY=sk-...
 X_BEARER_TOKEN=...
 NEXTAUTH_URL=https://your-domain.vercel.app

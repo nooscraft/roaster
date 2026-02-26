@@ -42,19 +42,27 @@ export async function GET(request: NextRequest) {
       orderBy = { bubbleScore: 'desc' };
     }
 
-    const roasts = await prisma.roast.findMany({
-      where,
-      include: {
-        post: {
-          include: {
-            source: true,
+    const [roasts, total, newest] = await Promise.all([
+      prisma.roast.findMany({
+        where,
+        include: {
+          post: {
+            include: {
+              source: true,
+            },
           },
         },
-      },
-      orderBy,
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+        orderBy,
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.roast.count({ where }),
+      prisma.roast.findFirst({
+        where: { status: 'APPROVED', approvedAt: { not: null } },
+        orderBy: { approvedAt: 'desc' },
+        select: { approvedAt: true },
+      }),
+    ]);
 
     // Shuffle so different handles are interleaved (Fisher-Yates)
     for (let i = roasts.length - 1; i > 0; i--) {
@@ -62,14 +70,6 @@ export async function GET(request: NextRequest) {
       [roasts[i], roasts[j]] = [roasts[j], roasts[i]];
     }
 
-    const total = await prisma.roast.count({ where });
-
-    // Global most recent roast approved time (for "last baked" display)
-    const newest = await prisma.roast.findFirst({
-      where: { status: 'APPROVED', approvedAt: { not: null } },
-      orderBy: { approvedAt: 'desc' },
-      select: { approvedAt: true },
-    });
     const newestApprovedAt = newest?.approvedAt?.toISOString() ?? null;
 
     return NextResponse.json({
