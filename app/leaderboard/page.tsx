@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
 
 interface LeaderboardEntry {
@@ -18,8 +19,10 @@ const CATEGORIES = [
 ];
 
 export default function LeaderboardPage() {
+  const router = useRouter();
   const [leaderboard, setLeaderboard] = useState<Record<string, LeaderboardEntry>>({});
   const [loading, setLoading] = useState(true);
+  const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/leaderboard')
@@ -130,9 +133,18 @@ export default function LeaderboardPage() {
 
                     {/* Footer */}
                     <div className="flex justify-end mt-4">
-                      <a href={`/roast/${entry.roast.id}`} className="roast-view-btn">
-                        FULL ROAST →
-                      </a>
+                      <button
+                        type="button"
+                        className="roast-view-btn"
+                        disabled={!!navigatingTo}
+                        onClick={() => {
+                          setNavigatingTo(entry.roast.id);
+                          router.push(`/roast/${entry.roast.id}`);
+                        }}
+                        style={{ opacity: navigatingTo === entry.roast.id ? 0.7 : 1, cursor: navigatingTo ? 'wait' : 'pointer' }}
+                      >
+                        {navigatingTo === entry.roast.id ? 'LOADING...' : 'FULL ROAST →'}
+                      </button>
                     </div>
                   </div>
                 </div>
