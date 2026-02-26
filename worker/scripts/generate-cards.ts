@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 import { prisma } from '../../lib/prisma';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 async function generateShareCards() {
@@ -36,6 +36,19 @@ async function generateShareCards() {
   });
 
   for (const roast of roasts) {
+    const filename = `roast-${roast.id}.png`;
+    const filepath = join(process.cwd(), 'public', 'share-cards', filename);
+
+    if (existsSync(filepath)) {
+      console.log(`Skipping roast ${roast.id} - card already exists`);
+      if (!roast.shareImageUrl) {
+        const shareImageUrl = `/share-cards/${filename}`;
+        await prisma.roast.update({ where: { id: roast.id }, data: { shareImageUrl } });
+        console.log(`  Updated DB with shareImageUrl`);
+      }
+      continue;
+    }
+
     try {
       const cardUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/card/${roast.id}`;
       console.log(`Generating card for roast ${roast.id}...`);
@@ -47,8 +60,6 @@ async function generateShareCards() {
       const screenshot = await page.screenshot({ type: 'png' });
 
       // Save to public/share-cards/
-      const filename = `roast-${roast.id}.png`;
-      const filepath = join(process.cwd(), 'public', 'share-cards', filename);
       writeFileSync(filepath, screenshot);
 
       // Update database with relative URL
