@@ -25,37 +25,36 @@ export default function AdminLayout({
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       <aside className="md:col-span-1">
-        <RetroCard variant="coral" className="sticky top-4">
-          <h2 className="pixel-font text-yellow-300 text-sm mb-4 text-center glow-text">
+        <RetroCard variant="yellow" className="sticky top-4">
+          <h2 className="pixel-font mb-4 text-center glow-text" style={{ fontSize: '10px', color: '#1a1a1a' }}>
             ADMIN PANEL
           </h2>
-          
+
           {session?.user && (
-            <div className="mb-6 pb-4 border-b-2 border-cyan-400">
-              <p className="text-cyan-300 text-xs text-center mb-1">Logged in as:</p>
-              <p className="text-white text-sm text-center font-bold truncate">
+            <div className="mb-6 pb-4" style={{ borderBottom: '2px solid #1a1a1a' }}>
+              <p className="roast-label text-center mb-1">Logged in as</p>
+              <p className="text-center truncate" style={{ color: '#1a1a1a', fontFamily: 'VT323, monospace', fontSize: '18px' }}>
                 {session.user.email}
               </p>
             </div>
           )}
 
           <nav className="space-y-2">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`block px-3 py-2 text-sm transition-colors ${
-                  pathname === item.href
-                    ? 'bg-pink-600 text-yellow-300 border-2 border-yellow-300'
-                    : 'text-cyan-300 hover:bg-purple-800 border-2 border-transparent'
-                }`}
-              >
-                {item.icon} {item.label}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`block admin-tab text-center ${isActive ? 'admin-tab--active' : 'admin-tab--inactive'}`}
+                >
+                  {item.icon} {item.label}
+                </a>
+              );
+            })}
           </nav>
 
-          <div className="mt-6 pt-4 border-t-2 border-cyan-400">
+          <div className="mt-6 pt-4" style={{ borderTop: '2px solid #1a1a1a' }}>
             <RetroButton
               onClick={() => signOut({ callbackUrl: '/' })}
               className="w-full text-xs"

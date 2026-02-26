@@ -80,18 +80,18 @@ export default function OptOutsPage() {
 
   return (
     <div>
-      <h1 className="pixel-font text-3xl text-yellow-300 mb-6 glow-text">
+      <h1 className="pixel-font mb-6 glow-text" style={{ fontSize: '18px', color: '#1a1a1a' }}>
         OPT-OUT MANAGEMENT
       </h1>
 
-      <RetroCard variant="coral" className="mb-6">
-        <h2 className="text-yellow-300 font-bold text-xl mb-4">
+      <RetroCard variant="yellow" className="mb-6">
+        <h2 className="pixel-font mb-4" style={{ fontSize: '10px', color: '#1a1a1a' }}>
           ➕ Add Opt-Out Entry
         </h2>
         <form onSubmit={handleAdd}>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-cyan-300 mb-2 text-sm">
+              <label className="roast-label mb-2">
                 Match Type
               </label>
               <select
@@ -123,28 +123,28 @@ export default function OptOutsPage() {
       </RetroCard>
 
       <RetroCard variant="yellow">
-        <h2 className="text-yellow-300 font-bold text-xl mb-4">
+        <h2 className="pixel-font mb-4" style={{ fontSize: '10px', color: '#1a1a1a' }}>
           📋 Opt-Out List ({optOuts.length})
         </h2>
 
         {loading ? (
-          <p className="text-cyan-300 text-center py-8">Loading...</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>Loading...</p>
         ) : optOuts.length === 0 ? (
-          <p className="text-cyan-300 text-center py-8">No opt-outs configured</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>No opt-outs configured</p>
         ) : (
           <div className="overflow-x-auto">
             <RetroTable headers={['Type', 'Value', 'Added', 'Actions']}>
               {optOuts.map((optOut) => (
                 <tr key={optOut.id}>
-                  <td className="text-pink-400">{optOut.matchType}</td>
-                  <td className="text-cyan-300 font-mono">{optOut.value}</td>
-                  <td className="text-cyan-300 text-sm">
+                  <td><span className="roast-tag">{optOut.matchType}</span></td>
+                  <td style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{optOut.value}</td>
+                  <td style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#888' }}>
                     {new Date(optOut.createdAt).toLocaleDateString()}
                   </td>
                   <td>
                     <button
                       onClick={() => handleDelete(optOut.id)}
-                      className="text-xs px-2 py-1 bg-red-800 hover:bg-red-700"
+                      className="admin-action-btn admin-action-btn--danger"
                     >
                       DELETE
                     </button>

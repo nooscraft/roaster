@@ -18,10 +18,18 @@ export const authOptions: NextAuthOptions = {
       if (!user.email) return false;
       return adminEmails.includes(user.email);
     },
-    async session({ session, user }) {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.isAdmin = user.email ? adminEmails.includes(user.email) : false;
+      }
+      return token;
+    },
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = user.id;
-        session.user.isAdmin = user.email ? adminEmails.includes(user.email) : false;
+        session.user.id = token.id as string;
+        session.user.isAdmin = token.email ? adminEmails.includes(token.email) : false;
       }
       return session;
     },

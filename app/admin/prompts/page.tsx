@@ -41,29 +41,72 @@ export default function PromptsPage() {
     }
   };
 
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+
   const handleActivate = async (id: string) => {
     try {
+      setCreateError(null);
       const res = await fetch(`/api/admin/prompts/${id}/activate`, {
         method: 'POST',
       });
 
       if (res.ok) {
         fetchPrompts();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to activate prompt');
       }
     } catch (error) {
       alert('Failed to activate prompt');
     }
   };
 
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateError(null);
+    if (!formData.name.trim() || !formData.systemPrompt.trim() || !formData.userPromptTemplate.trim()) {
+      setCreateError('Name, system prompt, and user prompt template are required.');
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const res = await fetch('/api/admin/prompts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          systemPrompt: formData.systemPrompt.trim(),
+          userPromptTemplate: formData.userPromptTemplate.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setFormData({ name: '', systemPrompt: '', userPromptTemplate: '' });
+        setShowForm(false);
+        fetchPrompts();
+      } else {
+        setCreateError(data.error || 'Failed to create prompt version');
+      }
+    } catch (error) {
+      setCreateError('Failed to create prompt version');
+    } finally {
+      setCreating(false);
+    }
+  };
+
   return (
     <div>
-      <h1 className="pixel-font text-3xl text-yellow-300 mb-6 glow-text">
+      <h1 className="pixel-font mb-6 glow-text" style={{ fontSize: '18px', color: '#1a1a1a' }}>
         PROMPT MANAGEMENT
       </h1>
 
-      <RetroCard variant="coral" className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-yellow-300 font-bold text-xl">
+      <RetroCard variant="yellow" className="mb-6">
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <h2 className="pixel-font" style={{ fontSize: '10px', color: '#1a1a1a' }}>
             💬 Prompt Versions ({prompts.length})
           </h2>
           <RetroButton onClick={() => setShowForm(!showForm)}>
@@ -72,16 +115,22 @@ export default function PromptsPage() {
         </div>
 
         {showForm && (
-          <div className="mb-6 p-4 bg-black/30 border-2 border-cyan-400">
-            <form className="space-y-4">
-              <RetroInput
-                label="Version Name"
-                placeholder="roast-v2"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
+          <div className="mb-6 p-4 retro-card" style={{ background: 'var(--cream)' }}>
+            {createError && (
+              <p className="mb-4 pixel-font text-sm" style={{ color: '#c0392b' }}>{createError}</p>
+            )}
+            <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-cyan-300 mb-2 pixel-font text-xs">
+                <label className="roast-label">Version Name</label>
+                <input
+                  className="retro-input"
+                  placeholder="roast-v2"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="roast-label mb-2">
                   System Prompt
                 </label>
                 <textarea
@@ -91,7 +140,7 @@ export default function PromptsPage() {
                 />
               </div>
               <div>
-                <label className="block text-cyan-300 mb-2 pixel-font text-xs">
+                <label className="roast-label mb-2">
                   User Prompt Template
                 </label>
                 <textarea
@@ -101,8 +150,8 @@ export default function PromptsPage() {
                   onChange={(e) => setFormData({ ...formData, userPromptTemplate: e.target.value })}
                 />
               </div>
-              <RetroButton type="submit">
-                CREATE VERSION
+              <RetroButton type="submit" disabled={creating}>
+                {creating ? 'CREATING...' : 'CREATE VERSION'}
               </RetroButton>
             </form>
           </div>
@@ -111,43 +160,43 @@ export default function PromptsPage() {
 
       {loading ? (
         <RetroCard variant="yellow">
-          <p className="text-cyan-300 text-center py-8">Loading...</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>Loading...</p>
         </RetroCard>
       ) : (
         <div className="space-y-4">
           {prompts.map((prompt) => (
-            <RetroCard key={prompt.id} variant={prompt.isActive ? 'coral' : 'yellow'}>
-              <div className="flex justify-between items-start mb-4">
+            <RetroCard key={prompt.id} variant="yellow">
+              <div className="flex justify-between items-start mb-4 flex-wrap gap-2">
                 <div>
-                  <h3 className="text-pink-400 font-bold text-xl mb-2">
+                  <h3 className="pixel-font mb-2" style={{ fontSize: '10px', color: '#1a1a1a' }}>
                     {prompt.name}
                   </h3>
                   {prompt.isActive && <RetroBadge>✓ ACTIVE</RetroBadge>}
                 </div>
-                <div className="text-cyan-300 text-sm">
+                <div className="roast-label">
                   {new Date(prompt.createdAt).toLocaleDateString()}
                 </div>
               </div>
 
               <div className="mb-4">
-                <h4 className="text-cyan-300 text-sm font-bold mb-2">System Prompt:</h4>
-                <p className="text-white text-sm bg-black/30 p-3 border border-purple-600 max-h-32 overflow-y-auto">
+                <h4 className="roast-label mb-2">System Prompt</h4>
+                <pre className="roast-translation p-3 max-h-32 overflow-y-auto text-sm" style={{ whiteSpace: 'pre-wrap', fontFamily: 'VT323, monospace' }}>
                   {prompt.systemPrompt}
-                </p>
+                </pre>
               </div>
 
               <div className="mb-4">
-                <h4 className="text-cyan-300 text-sm font-bold mb-2">User Prompt Template:</h4>
-                <p className="text-white text-sm bg-black/30 p-3 border border-purple-600 max-h-32 overflow-y-auto">
+                <h4 className="roast-label mb-2">User Prompt Template</h4>
+                <pre className="roast-reality p-3 max-h-32 overflow-y-auto text-sm" style={{ whiteSpace: 'pre-wrap', fontFamily: 'VT323, monospace' }}>
                   {prompt.userPromptTemplate}
-                </p>
+                </pre>
               </div>
 
               {!prompt.isActive && (
                 <div className="flex justify-end">
                   <button
                     onClick={() => handleActivate(prompt.id)}
-                    className="text-xs px-3 py-2 bg-green-700 hover:bg-green-600"
+                    className="admin-action-btn admin-action-btn--success"
                   >
                     ACTIVATE
                   </button>

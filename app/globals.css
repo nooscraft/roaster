@@ -278,6 +278,11 @@ body {
   box-shadow: 4px 4px 0 var(--yellow);
 }
 
+.retro-border-orange {
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
 /* ── Animations ── */
 @keyframes blink {
   0%, 49% { opacity: 1; }
@@ -286,6 +291,80 @@ body {
 
 .blink {
   animation: blink 1s infinite;
+}
+
+/* ── Admin filter/tab buttons (cream/black/yellow) ── */
+.admin-tab {
+  font-family: "Press Start 2P", cursive;
+  font-size: 8px;
+  padding: 8px 16px;
+  border: 2px solid var(--black);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.admin-tab--active {
+  background: var(--yellow);
+  color: var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+}
+.admin-tab--inactive {
+  background: var(--black);
+  color: var(--yellow);
+}
+.admin-tab--inactive:hover {
+  background: #333;
+}
+
+.admin-link {
+  display: block;
+  padding: 12px 16px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 8px;
+  background: var(--white);
+  border: 2px solid var(--black);
+  color: var(--black);
+  text-decoration: none;
+  transition: all 0.1s;
+  box-shadow: 3px 3px 0 var(--black);
+}
+.admin-link:hover {
+  background: var(--yellow);
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.admin-action-btn {
+  font-family: "Press Start 2P", cursive;
+  font-size: 8px;
+  padding: 8px 12px;
+  border: 2px solid var(--black);
+  cursor: pointer;
+  transition: all 0.1s;
+  text-decoration: none;
+  display: inline-block;
+}
+.admin-action-btn--primary {
+  background: var(--black);
+  color: var(--yellow);
+}
+.admin-action-btn--primary:hover {
+  background: #333;
+}
+.admin-action-btn--success {
+  background: #27ae60;
+  color: white;
+  border-color: #1a1a1a;
+}
+.admin-action-btn--success:hover {
+  background: #2ecc71;
+}
+.admin-action-btn--danger {
+  background: #c0392b;
+  color: white;
+  border-color: #1a1a1a;
+}
+.admin-action-btn--danger:hover {
+  background: #e74c3c;
 }
 
 /* ── Glow (subtle, for titles) ── */

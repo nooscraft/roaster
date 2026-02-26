@@ -124,12 +124,12 @@ export default function HandlesPage() {
 
   return (
     <div>
-      <h1 className="pixel-font text-3xl text-yellow-300 mb-6 glow-text">
+      <h1 className="pixel-font mb-6 glow-text" style={{ fontSize: '18px', color: '#1a1a1a' }}>
         HANDLE MANAGEMENT
       </h1>
 
-      <RetroCard variant="coral" className="mb-6">
-        <h2 className="text-yellow-300 font-bold text-xl mb-4">
+      <RetroCard variant="yellow" className="mb-6">
+        <h2 className="pixel-font mb-4" style={{ fontSize: '10px', color: '#1a1a1a' }}>
           ➕ Add New Handle
         </h2>
         <form onSubmit={handleAdd} className="flex gap-4">
@@ -146,56 +146,33 @@ export default function HandlesPage() {
       </RetroCard>
 
       <RetroCard variant="yellow">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-yellow-300 font-bold text-xl">
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <h2 className="pixel-font" style={{ fontSize: '10px', color: '#1a1a1a' }}>
             📋 Handles ({filteredSources.length})
           </h2>
           <div className="flex gap-2">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-3 py-1 text-xs ${
-                filter === 'all' ? 'bg-pink-600' : 'bg-purple-800'
-              }`}
-            >
-              ALL
-            </button>
-            <button
-              onClick={() => setFilter('enabled')}
-              className={`px-3 py-1 text-xs ${
-                filter === 'enabled' ? 'bg-pink-600' : 'bg-purple-800'
-              }`}
-            >
-              ENABLED
-            </button>
-            <button
-              onClick={() => setFilter('pending')}
-              className={`px-3 py-1 text-xs ${
-                filter === 'pending' ? 'bg-pink-600' : 'bg-purple-800'
-              }`}
-            >
-              PENDING
-            </button>
-            <button
-              onClick={() => setFilter('disabled')}
-              className={`px-3 py-1 text-xs ${
-                filter === 'disabled' ? 'bg-pink-600' : 'bg-purple-800'
-              }`}
-            >
-              DISABLED
-            </button>
+            {(['all', 'enabled', 'pending', 'disabled'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`admin-tab ${filter === f ? 'admin-tab--active' : 'admin-tab--inactive'}`}
+              >
+                {f.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
 
         {loading ? (
-          <p className="text-cyan-300 text-center py-8">Loading...</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>Loading...</p>
         ) : filteredSources.length === 0 ? (
-          <p className="text-cyan-300 text-center py-8">No handles found</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>No handles found</p>
         ) : (
           <div className="overflow-x-auto">
             <RetroTable headers={['Handle', 'Status', 'Posts', 'Last Sync', 'Actions']}>
               {filteredSources.map((source) => (
                 <tr key={source.id}>
-                  <td className="font-bold text-pink-400">@{source.handle}</td>
+                  <td><span className="roast-handle">@{source.handle}</span></td>
                   <td>
                     {source.enabled ? (
                       source.xUserId ? (
@@ -207,30 +184,30 @@ export default function HandlesPage() {
                       <RetroBadge>✗ DISABLED</RetroBadge>
                     )}
                   </td>
-                  <td className="text-cyan-300">{source._count?.posts || 0}</td>
-                  <td className="text-cyan-300 text-sm">
+                  <td style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{source._count?.posts || 0}</td>
+                  <td style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#888' }}>
                     {source.lastSyncedAt
                       ? new Date(source.lastSyncedAt).toLocaleString()
                       : 'Never'}
                   </td>
                   <td>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <button
                         onClick={() => handleToggle(source.id, source.enabled)}
-                        className="text-xs px-2 py-1 bg-purple-800 hover:bg-purple-700"
+                        className="admin-action-btn admin-action-btn--primary"
                       >
                         {source.enabled ? 'DISABLE' : 'ENABLE'}
                       </button>
                       <button
                         onClick={() => handleSync(source.id)}
-                        className="text-xs px-2 py-1 bg-purple-800 hover:bg-purple-700"
+                        className="admin-action-btn admin-action-btn--primary"
                         disabled={!source.enabled}
                       >
                         SYNC
                       </button>
                       <button
                         onClick={() => handleDelete(source.id, source.handle)}
-                        className="text-xs px-2 py-1 bg-red-800 hover:bg-red-700"
+                        className="admin-action-btn admin-action-btn--danger"
                       >
                         DELETE
                       </button>

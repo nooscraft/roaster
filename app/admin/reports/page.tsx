@@ -63,66 +63,49 @@ export default function ReportsPage() {
 
   return (
     <div>
-      <h1 className="pixel-font text-3xl text-yellow-300 mb-6 glow-text">
+      <h1 className="pixel-font mb-6 glow-text" style={{ fontSize: '18px', color: '#1a1a1a' }}>
         REPORT REVIEW
       </h1>
 
       <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => setFilter('PENDING')}
-          className={`px-4 py-2 ${
-            filter === 'PENDING' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          PENDING
-        </button>
-        <button
-          onClick={() => setFilter('REVIEWED')}
-          className={`px-4 py-2 ${
-            filter === 'REVIEWED' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          REVIEWED
-        </button>
-        <button
-          onClick={() => setFilter('DISMISSED')}
-          className={`px-4 py-2 ${
-            filter === 'DISMISSED' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          DISMISSED
-        </button>
+        {(['PENDING', 'REVIEWED', 'DISMISSED'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`admin-tab ${filter === f ? 'admin-tab--active' : 'admin-tab--inactive'}`}
+          >
+            {f}
+          </button>
+        ))}
       </div>
 
       {loading ? (
         <RetroCard variant="yellow">
-          <p className="text-cyan-300 text-center py-8">Loading...</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>Loading...</p>
         </RetroCard>
       ) : reports.length === 0 ? (
         <RetroCard variant="yellow">
-          <p className="text-cyan-300 text-center py-8">No reports found</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>No reports found</p>
         </RetroCard>
       ) : (
         <div className="space-y-4">
           {reports.map((report) => (
-            <RetroCard key={report.id} variant="coral">
+            <RetroCard key={report.id} variant="yellow">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="md:col-span-2">
                   <div className="flex items-center gap-2 mb-2">
                     <RetroBadge>{report.reason}</RetroBadge>
-                    <span className="text-cyan-300 text-sm">
-                      @{report.roast.post.source.handle}
-                    </span>
+                    <span className="roast-handle">@{report.roast.post.source.handle}</span>
                   </div>
-                  <p className="text-white text-sm mb-2">
+                  <p className="roast-translation mb-2" style={{ fontFamily: 'VT323, monospace', fontSize: '16px' }}>
                     {report.roast.post.textExcerpt.substring(0, 150)}...
                   </p>
                   {report.details && (
-                    <p className="text-yellow-300 text-sm italic">
+                    <p className="mb-2" style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#888', fontStyle: 'italic' }}>
                       Details: {report.details}
                     </p>
                   )}
-                  <p className="text-cyan-300 text-xs mt-2">
+                  <p className="roast-label mt-2">
                     Reported: {new Date(report.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -131,7 +114,7 @@ export default function ReportsPage() {
                     href={`/roast/${report.roast.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-2 bg-purple-800 hover:bg-purple-700 text-center"
+                    className="admin-action-btn admin-action-btn--primary text-center"
                   >
                     VIEW ROAST
                   </a>
@@ -139,13 +122,13 @@ export default function ReportsPage() {
                     <>
                       <button
                         onClick={() => handleUpdate(report.id, 'REVIEWED')}
-                        className="text-xs px-3 py-2 bg-green-700 hover:bg-green-600"
+                        className="admin-action-btn admin-action-btn--success"
                       >
                         MARK REVIEWED
                       </button>
                       <button
                         onClick={() => handleUpdate(report.id, 'DISMISSED')}
-                        className="text-xs px-3 py-2 bg-red-700 hover:bg-red-600"
+                        className="admin-action-btn admin-action-btn--danger"
                       >
                         DISMISS
                       </button>

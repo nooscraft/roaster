@@ -79,44 +79,29 @@ export default function RoastsPage() {
 
   return (
     <div>
-      <h1 className="pixel-font text-3xl text-yellow-300 mb-6 glow-text">
+      <h1 className="pixel-font mb-6 glow-text" style={{ fontSize: '18px', color: '#1a1a1a' }}>
         ROAST MODERATION
       </h1>
 
       <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => setFilter('PENDING')}
-          className={`px-4 py-2 ${
-            filter === 'PENDING' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          PENDING ({roasts.filter(r => r.status === 'PENDING').length})
-        </button>
-        <button
-          onClick={() => setFilter('APPROVED')}
-          className={`px-4 py-2 ${
-            filter === 'APPROVED' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          APPROVED
-        </button>
-        <button
-          onClick={() => setFilter('REJECTED')}
-          className={`px-4 py-2 ${
-            filter === 'REJECTED' ? 'bg-pink-600' : 'bg-purple-800'
-          }`}
-        >
-          REJECTED
-        </button>
+        {(['PENDING', 'APPROVED', 'REJECTED'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`admin-tab ${filter === f ? 'admin-tab--active' : 'admin-tab--inactive'}`}
+          >
+            {f === 'PENDING' ? `PENDING (${roasts.filter(r => r.status === 'PENDING').length})` : f}
+          </button>
+        ))}
       </div>
 
       {loading ? (
         <RetroCard variant="yellow">
-          <p className="text-cyan-300 text-center py-8">Loading...</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>Loading...</p>
         </RetroCard>
       ) : roasts.length === 0 ? (
         <RetroCard variant="yellow">
-          <p className="text-cyan-300 text-center py-8">No roasts found</p>
+          <p className="pixel-font text-center py-8" style={{ fontSize: '10px', color: '#888' }}>No roasts found</p>
         </RetroCard>
       ) : (
         <div className="grid gap-6">
@@ -130,42 +115,41 @@ export default function RoastsPage() {
                 <div className="md:col-span-3">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="text-pink-400 font-bold text-xl mb-1">
+                      <span className="roast-handle mb-2" style={{ cursor: 'default' }}>
                         @{roast.post.source.handle}
-                      </h3>
+                      </span>
                       <RetroBadge>{roast.archetype}</RetroBadge>
                     </div>
                     <div className="flex gap-2">
                       {roast.tags.map((tag, i) => (
-                        <span
-                          key={i}
-                          className="text-xs px-2 py-1 bg-purple-800 text-cyan-300"
-                        >
+                        <span key={i} className="roast-tag">
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="mb-3 p-3 bg-black/30 border-2 border-purple-600">
-                    <p className="text-white text-sm line-clamp-2">
+                  <div className="roast-translation mb-3">
+                    <p className="line-clamp-2" style={{ fontFamily: 'VT323, monospace', fontSize: '16px' }}>
                       {roast.post.textExcerpt}
                     </p>
                   </div>
 
                   <div className="mb-3">
-                    <p className="text-cyan-300 text-sm italic mb-2">
-                      <strong>Translation:</strong> {roast.sections.translation}
+                    <p className="roast-label mb-1">Translation</p>
+                    <p className="mb-2" style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#1a1a1a' }}>
+                      {roast.sections.translation}
                     </p>
-                    <p className="text-yellow-300 text-sm">
-                      <strong>Reality Check:</strong> {roast.sections.realityCheck}
+                    <p className="roast-label mb-1">Reality Check</p>
+                    <p style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#1a1a1a' }}>
+                      {roast.sections.realityCheck}
                     </p>
                   </div>
 
                   <div className="flex gap-2 justify-end">
                     <button
                       onClick={() => setSelectedRoast(roast)}
-                      className="text-xs px-3 py-2 bg-purple-800 hover:bg-purple-700"
+                      className="admin-action-btn admin-action-btn--primary"
                     >
                       VIEW DETAILS
                     </button>
@@ -173,13 +157,13 @@ export default function RoastsPage() {
                       <>
                         <button
                           onClick={() => handleApprove(roast.id)}
-                          className="text-xs px-3 py-2 bg-green-700 hover:bg-green-600"
+                          className="admin-action-btn admin-action-btn--success"
                         >
                           ✓ APPROVE
                         </button>
                         <button
                           onClick={() => handleReject(roast.id)}
-                          className="text-xs px-3 py-2 bg-red-700 hover:bg-red-600"
+                          className="admin-action-btn admin-action-btn--danger"
                         >
                           ✗ REJECT
                         </button>
@@ -195,55 +179,56 @@ export default function RoastsPage() {
 
       {selectedRoast && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 flex items-center justify-center p-4 z-50"
+          style={{ background: 'rgba(0,0,0,0.6)' }}
           onClick={() => setSelectedRoast(null)}
         >
           <RetroCard
-            variant="coral"
+            variant="yellow"
             className="max-w-3xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            <h2 className="pixel-font text-2xl text-yellow-300 mb-4 glow-text">
+            <h2 className="pixel-font mb-4 glow-text" style={{ fontSize: '14px', color: '#1a1a1a' }}>
               ROAST DETAILS
             </h2>
 
             <div className="mb-4">
-              <h3 className="text-pink-400 font-bold mb-2">Original Post</h3>
-              <p className="text-white mb-2">{selectedRoast.post.textExcerpt}</p>
+              <h3 className="roast-label mb-2">Original Post</h3>
+              <p className="mb-2" style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{selectedRoast.post.textExcerpt}</p>
               <a
                 href={selectedRoast.post.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-300 text-sm hover:text-cyan-200"
+                style={{ color: '#c0392b', fontFamily: 'VT323, monospace', fontSize: '18px', textDecoration: 'underline' }}
               >
                 View on X →
               </a>
             </div>
 
             <div className="mb-4">
-              <h3 className="text-pink-400 font-bold mb-2">Roast Content</h3>
+              <h3 className="roast-label mb-2">Roast Content</h3>
               <div className="space-y-3">
                 <div>
-                  <strong className="text-cyan-300">Translation:</strong>
-                  <p className="text-white">{selectedRoast.sections.translation}</p>
+                  <p className="roast-label mb-1">Translation</p>
+                  <p style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{selectedRoast.sections.translation}</p>
                 </div>
                 <div>
-                  <strong className="text-cyan-300">Reality Check:</strong>
-                  <p className="text-white">{selectedRoast.sections.realityCheck}</p>
+                  <p className="roast-label mb-1">Reality Check</p>
+                  <p style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{selectedRoast.sections.realityCheck}</p>
                 </div>
               </div>
             </div>
 
             <div className="mb-4">
-              <h3 className="text-pink-400 font-bold mb-2">Score Breakdown</h3>
+              <h3 className="roast-label mb-2">Score Breakdown</h3>
               <div className="space-y-2">
                 {selectedRoast.sections.scoreBreakdown?.map((item: any, i: number) => (
-                  <div key={i} className="p-2 bg-black/30">
+                  <div key={i} className="roast-reality p-3">
                     <div className="flex justify-between items-center mb-1">
-                      <strong className="text-cyan-300">{item.label}</strong>
-                      <span className="text-yellow-300">{item.score}/10</span>
+                      <strong className="roast-label">{item.label}</strong>
+                      <span className="roast-tag">{item.score}/10</span>
                     </div>
-                    <p className="text-white text-sm">{item.reason}</p>
+                    <p style={{ fontFamily: 'VT323, monospace', fontSize: '16px' }}>{item.reason}</p>
                   </div>
                 ))}
               </div>
@@ -251,8 +236,8 @@ export default function RoastsPage() {
 
             {selectedRoast.sections.awardCandidate && (
               <div className="mb-4">
-                <h3 className="text-pink-400 font-bold mb-2">Award Candidate</h3>
-                <p className="text-white">{selectedRoast.sections.awardCandidate}</p>
+                <h3 className="roast-label mb-2">Award Candidate</h3>
+                <p style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a' }}>{selectedRoast.sections.awardCandidate}</p>
               </div>
             )}
 
