@@ -59,8 +59,10 @@ async function generateShareCards() {
       // Navigate to card page
       await page.goto(cardUrl, { waitUntil: 'networkidle' });
 
-      // Take screenshot
-      const screenshot = await page.screenshot({ type: 'png' });
+      // Screenshot only the card element (avoids header/footer, ensures exact 1200x630)
+      const card = page.locator('[data-share-card]');
+      await card.waitFor({ state: 'visible' });
+      const screenshot = await card.screenshot({ type: 'png' });
 
       // Save to public/share-cards/
       writeFileSync(filepath, screenshot);

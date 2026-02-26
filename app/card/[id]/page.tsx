@@ -23,42 +23,91 @@ export default async function CardPage({ params }: PageProps) {
 
   return (
     <div
-      className="w-[1200px] h-[630px] flex items-center justify-center p-8"
+      data-share-card
+      className="w-[1200px] h-[630px] flex flex-col p-10 box-border"
       style={{
-        background: 'linear-gradient(135deg, #000080 0%, #000040 100%)',
+        background: '#F2ECD8',
+        border: '4px solid #1a1a1a',
+        boxShadow: '6px 6px 0 #1a1a1a',
+        fontFamily: '"VT323", monospace',
       }}
     >
-      <div className="w-full h-full border-4 border-cyan-400 bg-purple-900/80 p-8 flex flex-col justify-between">
-        <div>
-          <h1 className="pixel-font text-4xl text-yellow-300 text-center mb-4 glow-text">
-            FROTH
-          </h1>
-          <div className="flex justify-center mb-6">
-            <BubbleScoreMeter score={roast.bubbleScore} size="md" />
-          </div>
-        </div>
-
-        <div className="flex-1 flex flex-col justify-center">
-          <h2 className="text-3xl text-pink-400 font-bold text-center mb-4">
-            {roast.archetype}
-          </h2>
-          <h3 className="text-2xl text-cyan-300 text-center mb-6">
-            @{roast.post.source.handle}
-          </h3>
-          <p className="text-white text-xl text-center italic mb-4">
-            "{(roast.sections as any)?.translation}"
-          </p>
-          <p className="text-yellow-300 text-lg text-center">
-            {(roast.sections as any)?.realityCheck}
-          </p>
-        </div>
-
-        <div className="text-center">
-          <p className="text-cyan-300 text-sm">
-            froth.wtf
-          </p>
+      {/* Header: FROTH + score */}
+      <div className="flex justify-between items-center mb-6">
+        <h1
+          className="pixel-font"
+          style={{ fontSize: '28px', color: '#1a1a1a', textShadow: '2px 2px 0 #F5C518' }}
+        >
+          FROTH
+        </h1>
+        <div className="flex items-center gap-2">
+          <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
         </div>
       </div>
+
+      {/* Archetype + handle */}
+      <div className="mb-4">
+        <p
+          className="pixel-font mb-1"
+          style={{ fontSize: '10px', color: '#888' }}
+        >
+          @{roast.post.source.handle}
+        </p>
+        <p
+          className="pixel-font font-bold"
+          style={{ fontSize: '14px', color: '#c0392b', lineHeight: 1.6 }}
+        >
+          {roast.archetype}
+        </p>
+      </div>
+
+      {/* Translation */}
+      <div
+        className="flex-1 flex flex-col justify-center mb-4"
+        style={{
+          background: '#fff',
+          border: '3px solid #1a1a1a',
+          borderLeft: '6px solid #F5C518',
+          padding: '16px 20px',
+        }}
+      >
+        <p
+        style={{
+          fontSize: '26px',
+          color: '#1a1a1a',
+          lineHeight: 1.4,
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+        } as React.CSSProperties}
+        >
+          "{(roast.sections as any)?.translation}"
+        </p>
+      </div>
+
+      {/* Reality check - truncated if needed */}
+      <p
+        style={{
+          fontSize: '22px',
+          color: '#1a1a1a',
+          lineHeight: 1.3,
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+        }}
+      >
+        {(roast.sections as any)?.realityCheck}
+      </p>
+
+      {/* Footer */}
+      <p
+        className="pixel-font text-center mt-2"
+        style={{ fontSize: '8px', color: '#888' }}
+      >
+        froth.wtf — MEASURING THE FROTH IN FRONTIER AI
+      </p>
     </div>
   );
 }
