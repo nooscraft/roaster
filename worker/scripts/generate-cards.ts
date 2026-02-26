@@ -6,13 +6,11 @@ import { join } from 'path';
 async function generateShareCards() {
   console.log('🎨 Starting share card generation...');
 
-  // Find approved roasts without share images
-  const roasts = await prisma.roast.findMany({
-    where: {
-      status: 'APPROVED',
-      shareImageUrl: null,
-    },
-    take: 20, // Limit to avoid long runs
+  // Find approved roasts, then filter to those missing the card file on disk.
+  // (DB shareImageUrl can be set but file missing if a previous push failed)
+  const allApproved = await prisma.roast.findMany({
+    where: { status: 'APPROVED' },
+    take: 50,
     include: {
       post: {
         include: {
@@ -22,7 +20,12 @@ async function generateShareCards() {
     },
   });
 
-  console.log(`Found ${roasts.length} roasts needing share cards`);
+  const roasts = allApproved.filter((roast) => {
+    const filepath = join(process.cwd(), 'public', 'share-cards', `roast-${roast.id}.png`);
+    return !existsSync(filepath);
+  });
+
+  console.log(`Found ${roasts.length} roasts needing share cards (${allApproved.length - roasts.length} already have files)`);
 
   if (roasts.length === 0) {
     console.log('✅ All roasts already have share cards');
