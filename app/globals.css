@@ -156,6 +156,24 @@ body {
   color: var(--black);
 }
 
+.copy-btn {
+  transition: all 0.25s ease;
+}
+.copy-btn--success {
+  background: #27ae60 !important;
+  color: #fff !important;
+  animation: copy-pop 0.4s ease;
+}
+.copy-btn--success:hover {
+  background: #27ae60 !important;
+  color: #fff !important;
+}
+@keyframes copy-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
 @keyframes roast-spin {
   to { transform: rotate(360deg); }
 }

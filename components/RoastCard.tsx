@@ -51,7 +51,7 @@ export function RoastCard({ roast }: RoastCardProps) {
                 marginTop: '6px',
               }}
             >
-              View original post ↗
+              View on X ↗
             </a>
           )}
         </div>
