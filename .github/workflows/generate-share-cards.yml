@@ -40,7 +40,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         run: |
-          node --loader tsx --no-warnings worker/scripts/generate-cards.ts
+          npx tsx worker/scripts/generate-cards.ts
       
       - name: Commit and push images
         run: |
