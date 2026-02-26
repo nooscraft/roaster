@@ -17,9 +17,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!roast) return { title: 'Roast Not Found' };
 
+  const title = `${roast.archetype} — @${roast.post.source.handle}`;
+  const description = (roast.sections as any).translation;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://froth-eight.vercel.app';
+  const imageUrl = roast.shareImageUrl ? `${baseUrl}${roast.shareImageUrl}` : undefined;
+
   return {
-    title: `${roast.archetype} — @${roast.post.source.handle}`,
-    description: (roast.sections as any).translation,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      ...(imageUrl && {
+        images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
+      }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      ...(imageUrl && { images: [imageUrl] }),
+    },
   };
 }
 
