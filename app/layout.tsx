@@ -23,7 +23,7 @@ export default function RootLayout({
       <body style={{ backgroundColor: '#F2ECD8' }}>
         <GoogleAnalytics />
         <SessionProvider>
-        <div className="retro-container">
+        <div className="retro-container min-h-screen flex flex-col">
           {/* Header */}
           <header style={{ background: '#1a1a1a', borderBottom: '4px solid #1a1a1a' }} className="p-4 mb-8">
             <div className="max-w-7xl mx-auto">
@@ -65,7 +65,7 @@ export default function RootLayout({
             </div>
           </header>
 
-          <main className="max-w-7xl mx-auto px-4 pb-8">
+          <main className="w-full max-w-7xl mx-auto px-4 pb-8 flex-1">
             {children}
           </main>
 
