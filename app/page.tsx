@@ -42,6 +42,11 @@ function formatLastRoastLine(iso: string): string {
   return `Last roast batch ${timeStr}${suffix}`;
 }
 
+function getPublishedAtMs(iso: string): number {
+  const ms = new Date(iso).getTime();
+  return Number.isNaN(ms) ? 0 : ms;
+}
+
 export default function Home() {
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [newestApprovedAt, setNewestApprovedAt] = useState<string | null>(null);
@@ -64,7 +69,10 @@ export default function Home() {
       });
       const res = await fetch(`/api/feed?${params}`);
       const data = await res.json();
-      setRoasts(data.roasts || []);
+      const sortedRoasts = [...(data.roasts || [])].sort(
+        (a: Roast, b: Roast) => getPublishedAtMs(b.post.publishedAt) - getPublishedAtMs(a.post.publishedAt)
+      );
+      setRoasts(sortedRoasts);
       setNewestApprovedAt(data.newestApprovedAt || null);
     } catch (error) {
       console.error('Failed to fetch roasts:', error);
