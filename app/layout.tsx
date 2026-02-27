@@ -44,6 +44,7 @@ export default function RootLayout({
                   { href: '/', label: 'HOME' },
                   { href: '/leaderboard', label: 'LEADERBOARD' },
                   { href: '/submit', label: 'SUBMIT' },
+                  { href: '/stats', label: 'STATS' },
                 ].map(({ href, label }) => (
                   <a
                     key={href}
