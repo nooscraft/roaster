@@ -131,7 +131,6 @@ body {
   border: 2px solid var(--black);
   padding: 2px 8px;
   font-size: 13px;
-  font-weight: bold;
   color: var(--black);
 }
 

@@ -44,7 +44,7 @@ export function RoastCard({ roast }: RoastCardProps) {
               rel="noopener noreferrer"
               style={{
                 display: 'block',
-                fontSize: '14px',
+                fontSize: '16px',
                 color: '#1a1a1a',
                 fontFamily: 'VT323, monospace',
                 textDecoration: 'underline',
@@ -77,11 +77,11 @@ export function RoastCard({ roast }: RoastCardProps) {
           padding: '10px 12px',
           marginBottom: '12px',
           fontFamily: 'VT323, monospace',
-          fontSize: '16px',
+          fontSize: '17px',
           color: '#333',
           lineHeight: '1.4',
         }}>
-          <span style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '7px', color: '#888', display: 'block', marginBottom: '6px' }}>
+          <span style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '8px', color: '#888', display: 'block', marginBottom: '6px' }}>
             ORIGINAL POST
           </span>
           "{roast.post.textExcerpt.length > 160
@@ -93,13 +93,13 @@ export function RoastCard({ roast }: RoastCardProps) {
       {/* Translation */}
       <div className="roast-translation">
         <span className="roast-label">WHAT THEY MEANT</span>
-        <p style={{ fontSize: '16px' }}>{roast.sections?.translation}</p>
+        <p style={{ fontSize: '17px' }}>{roast.sections?.translation}</p>
       </div>
 
       {/* Tags */}
       <div className="flex gap-1 flex-wrap mt-3">
         {roast.tags.slice(0, 3).map((tag, i) => (
-          <span key={i} className="roast-tag" style={{ fontSize: '11px' }}>#{tag}</span>
+          <span key={i} className="roast-tag" style={{ fontSize: '14px' }}>#{tag}</span>
         ))}
       </div>
 

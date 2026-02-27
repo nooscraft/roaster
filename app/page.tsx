@@ -1,10 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RetroCard } from '@/components/retro/RetroCard';
 import { RoastCard } from '@/components/RoastCard';
-import { RetroInput } from '@/components/retro/RetroInput';
-import { RetroButton } from '@/components/retro/RetroButton';
 
 interface Roast {
   id: string;
@@ -79,28 +76,28 @@ export default function Home() {
   return (
     <div>
       {/* Title */}
-      <div className="text-center mb-8">
-        <h2 className="pixel-font glow-text mb-2" style={{ fontSize: '18px', color: '#1a1a1a' }}>
+      <div className="text-center mb-10">
+        <h2 className="pixel-font glow-text mb-3" style={{ fontSize: '20px', color: '#1a1a1a', lineHeight: 1.6 }}>
           FRESHLY FROTH'D
         </h2>
-        <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '20px' }}>
+        <p style={{ color: '#575757', fontFamily: 'VT323, monospace', fontSize: '24px', lineHeight: 1.35 }}>
           Because someone has to hold the buzzword bucket — one post at a time
         </p>
         {newestApprovedAt && (
-          <p style={{ color: '#666', fontFamily: 'VT323, monospace', fontSize: '16px', marginTop: '8px' }}>
+          <p style={{ color: '#4d4d4d', fontFamily: 'VT323, monospace', fontSize: '19px', marginTop: '10px', lineHeight: 1.35 }}>
             {formatLastRoastLine(newestApprovedAt)}
           </p>
         )}
       </div>
 
       {/* Filters */}
-      <div className="retro-card mb-8">
-        <h3 className="pixel-font mb-4" style={{ fontSize: '10px', color: '#1a1a1a' }}>
+      <div className="retro-card mb-10">
+        <h3 className="pixel-font mb-6" style={{ fontSize: '11px', color: '#1a1a1a' }}>
           FILTERS
         </h3>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-6">
           <div>
-            <label className="roast-label">HANDLE</label>
+            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>HANDLE</label>
             <input
               className="retro-input"
               placeholder="e.g. OpenAI"
@@ -109,7 +106,7 @@ export default function Home() {
             />
           </div>
           <div>
-            <label className="roast-label">MIN BUBBLE SCORE: {minScore}</label>
+            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MIN BUBBLE SCORE: {minScore}</label>
             <input
               type="range" min="0" max="10" step="0.5"
               value={minScore}
@@ -119,7 +116,7 @@ export default function Home() {
             />
           </div>
           <div>
-            <label className="roast-label">MAX BUBBLE SCORE: {maxScore}</label>
+            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MAX BUBBLE SCORE: {maxScore}</label>
             <input
               type="range" min="0" max="10" step="0.5"
               value={maxScore}
@@ -129,7 +126,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-6">
           <button className="retro-button" onClick={fetchRoasts}>
             APPLY FILTERS
           </button>
@@ -139,17 +136,17 @@ export default function Home() {
       {/* Feed */}
       {loading ? (
         <div className="retro-card text-center py-12">
-          <p className="pixel-font" style={{ fontSize: '10px' }}>LOADING ROASTS...</p>
+          <p className="pixel-font" style={{ fontSize: '11px' }}>LOADING ROASTS...</p>
         </div>
       ) : roasts.length === 0 ? (
         <div className="retro-card text-center py-12">
-          <p className="pixel-font mb-4" style={{ fontSize: '10px' }}>NO ROASTS YET</p>
+          <p className="pixel-font mb-4" style={{ fontSize: '11px' }}>NO ROASTS YET</p>
           <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '18px' }}>
             Run <code>npx tsx scripts/generate-roasts-now.ts</code> to generate some!
           </p>
         </div>
       ) : (
-        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+        <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
           {roasts.map((roast) => (
             <RoastCard key={roast.id} roast={roast} />
           ))}
