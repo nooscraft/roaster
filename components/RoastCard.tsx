@@ -7,6 +7,7 @@ import { BubbleScoreMeter } from './retro/BubbleScoreMeter';
 interface RoastCardProps {
   roast: {
     id: string;
+    approvedAt?: string | null;
     bubbleScore: number;
     archetype: string;
     tags: string[];
@@ -28,9 +29,46 @@ export function RoastCard({ roast }: RoastCardProps) {
   const handle = roast.post.source.handle;
   const xProfileUrl = `https://x.com/${handle}`;
   const tweetUrl = roast.post.url;
+  const roastTimestamp = roast.approvedAt ?? roast.post.publishedAt;
+  const roastTimeMs = new Date(roastTimestamp).getTime();
+  const isLatestRoast = !Number.isNaN(roastTimeMs) && Date.now() - roastTimeMs <= 24 * 60 * 60 * 1000;
+  const latestAccent = '#c0392b';
 
   return (
-    <div className="roast-card" style={{ fontSize: '14px' }}>
+    <div
+      className="roast-card"
+      style={{
+        fontSize: '14px',
+        position: 'relative',
+        ...(isLatestRoast
+          ? {
+              borderColor: latestAccent,
+              boxShadow: `5px 5px 0 ${latestAccent}`,
+            }
+          : {}),
+      }}
+    >
+      {isLatestRoast && (
+        <span
+          className="pixel-font"
+          style={{
+            position: 'absolute',
+            top: '-12px',
+            right: '-12px',
+            fontSize: '7px',
+            lineHeight: 1.3,
+            color: '#fff',
+            background: latestAccent,
+            border: `2px solid ${latestAccent}`,
+            padding: '4px 7px',
+            display: 'inline-block',
+            zIndex: 1,
+            boxShadow: '2px 2px 0 #1a1a1a',
+          }}
+        >
+          LATEST
+        </span>
+      )}
       {/* Handle + Score row */}
       <div className="flex justify-between items-start mb-3">
         <div>
