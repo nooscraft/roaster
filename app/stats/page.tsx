@@ -169,7 +169,7 @@ export default async function StatsPage() {
         </div>
       </div>
 
-      <div className="retro-card mb-8">
+      <div className="retro-card mb-8" id="bubble-score-rules">
         <p className="pixel-font mb-3" style={{ fontSize: '10px', color: '#1a1a1a' }}>
           HOW BUBBLE SCORE IS CALCULATED
         </p>

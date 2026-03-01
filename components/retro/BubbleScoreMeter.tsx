@@ -8,6 +8,8 @@ interface BubbleScoreMeterProps {
 export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) {
   const clampedScore = Math.max(0, Math.min(10, score));
   const percentage = (clampedScore / 10) * 100;
+  const scoreExplanation =
+    'Starts at 5.0, adds points for buzzwords/benchmark theater, subtracts for real shipping evidence, then clamps between 0 and 10.';
   
   const getColor = (score: number) => {
     if (score < 3) return '#22c55e'; // green - grounded
@@ -61,7 +63,64 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
         </div>
       </div>
       <div className="text-center">
-        <div className="pixel-font" style={{ fontSize: '7px', color: '#888' }}>BUBBLE SCORE</div>
+        <div className="pixel-font" style={{ fontSize: '7px', color: '#888' }}>
+          BUBBLE SCORE
+        </div>
+        <div className="relative inline-flex items-center gap-1 mt-1 group">
+          <a
+            href="/stats#bubble-score-rules"
+            style={{
+              display: 'inline-block',
+              fontFamily: 'VT323, monospace',
+              fontSize: '14px',
+              color: '#555',
+              textDecoration: 'underline',
+            }}
+            aria-label="How bubble score is calculated"
+          >
+            How scored?
+          </a>
+          <span
+            tabIndex={0}
+            className="pixel-font"
+            style={{
+              fontSize: '7px',
+              color: '#1a1a1a',
+              background: '#F5C518',
+              border: '2px solid #1a1a1a',
+              width: '16px',
+              height: '16px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              lineHeight: 1,
+              cursor: 'help',
+            }}
+            aria-label="Bubble score formula"
+          >
+            ?
+          </span>
+
+          <div
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+            style={{
+              minWidth: '220px',
+              maxWidth: '260px',
+              background: '#F2ECD8',
+              color: '#1a1a1a',
+              border: '2px solid #1a1a1a',
+              boxShadow: '3px 3px 0 #1a1a1a',
+              padding: '8px 10px',
+              fontFamily: 'VT323, monospace',
+              fontSize: '17px',
+              lineHeight: 1.2,
+              zIndex: 5,
+              textAlign: 'left',
+            }}
+          >
+            {scoreExplanation}
+          </div>
+        </div>
       </div>
     </div>
   );

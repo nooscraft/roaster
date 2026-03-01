@@ -75,6 +75,11 @@ body {
 .roast-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 7px 7px 0 var(--black);
+  z-index: 10;
+}
+
+.roast-card:focus-within {
+  z-index: 10;
 }
 
 .roast-handle {
@@ -127,8 +132,8 @@ body {
 }
 
 .roast-tag {
-  background: var(--yellow);
-  border: 2px solid var(--black);
+  background: transparent;
+  border: none;
   padding: 2px 8px;
   font-size: 13px;
   color: var(--black);

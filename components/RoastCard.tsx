@@ -26,6 +26,7 @@ interface RoastCardProps {
 export function RoastCard({ roast }: RoastCardProps) {
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [copied, setCopied] = useState(false);
   const handle = roast.post.source.handle;
   const xProfileUrl = `https://x.com/${handle}`;
   const tweetUrl = roast.post.url;
@@ -33,6 +34,24 @@ export function RoastCard({ roast }: RoastCardProps) {
   const roastTimeMs = new Date(roastTimestamp).getTime();
   const isLatestRoast = !Number.isNaN(roastTimeMs) && Date.now() - roastTimeMs <= 24 * 60 * 60 * 1000;
   const latestAccent = '#c0392b';
+
+  const getRoastUrl = () => {
+    if (typeof window === 'undefined') return `/roast/${roast.id}`;
+    return `${window.location.origin}/roast/${roast.id}`;
+  };
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(getRoastUrl());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
+  };
+
+  const handleShareOnX = () => {
+    const roastUrl = getRoastUrl();
+    const shareText = `This one got a ${roast.bubbleScore.toFixed(1)}/10 bubble score on @${handle} 😮`;
+    const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(roastUrl)}`;
+    window.open(intentUrl, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div
@@ -135,48 +154,91 @@ export function RoastCard({ roast }: RoastCardProps) {
       </div>
 
       {/* Tags */}
-      <div className="flex gap-1 flex-wrap mt-3">
-        {roast.tags.slice(0, 3).map((tag, i) => (
-          <span key={i} className="roast-tag" style={{ fontSize: '14px' }}>#{tag}</span>
-        ))}
-      </div>
+      <p
+        className="mt-3"
+        style={{ fontFamily: 'VT323, monospace', fontSize: '16px', color: '#777', lineHeight: 1.2 }}
+      >
+        {roast.tags.slice(0, 3).join(' · ')}
+      </p>
 
       {/* Footer */}
       <div className="flex flex-wrap justify-between items-center gap-2 mt-3 pt-3 border-t-2 border-black">
         <span style={{ fontSize: '12px', color: '#888', fontFamily: 'VT323, monospace' }}>
           {new Date(roast.post.publishedAt).toLocaleDateString()}
         </span>
-        <button
-          type="button"
-          onClick={() => {
-            setIsNavigating(true);
-            router.push(`/roast/${roast.id}`);
-          }}
-          disabled={isNavigating}
-          className="roast-view-btn"
-          style={{
-            border: 'none',
-            cursor: isNavigating ? 'wait' : 'pointer',
-          }}
-        >
-          {isNavigating ? (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              <span
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  border: '2px solid currentColor',
-                  borderTopColor: 'transparent',
-                  borderRadius: '50%',
-                  animation: 'roast-spin 0.6s linear infinite',
-                }}
-              />
-              LOADING
-            </span>
-          ) : (
-            'MORE →'
-          )}
-        </button>
+        <div className="flex flex-wrap justify-end gap-2">
+          <button
+            type="button"
+            onClick={handleShareOnX}
+            className="roast-view-btn"
+            style={{
+              border: '2px solid #1d4ed8',
+              cursor: 'pointer',
+              fontSize: '7px',
+              padding: '9px 10px',
+              minWidth: '86px',
+              background: '#ffffff',
+              color: '#1a1a1a',
+              boxShadow: '3px 3px 0 #1d4ed8',
+            }}
+          >
+            SHARE X
+          </button>
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className={`roast-view-btn copy-btn ${copied ? 'copy-btn--success' : ''}`}
+            style={{
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '7px',
+              padding: '9px 10px',
+              minWidth: '92px',
+              background: copied ? '#27ae60' : '#4b5563',
+              color: '#fff',
+              boxShadow: '3px 3px 0 #1a1a1a',
+            }}
+          >
+            {copied ? 'COPIED ✓' : 'COPY LINK'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsNavigating(true);
+              router.push(`/roast/${roast.id}`);
+            }}
+            disabled={isNavigating}
+            className="roast-view-btn"
+            style={{
+              border: 'none',
+              cursor: isNavigating ? 'wait' : 'pointer',
+              fontSize: '7px',
+              padding: '9px 10px',
+              minWidth: '96px',
+              background: '#F5C518',
+              color: '#1a1a1a',
+              boxShadow: '3px 3px 0 #1a1a1a',
+            }}
+          >
+            {isNavigating ? (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    border: '2px solid currentColor',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'roast-spin 0.6s linear infinite',
+                  }}
+                />
+                LOAD
+              </span>
+            ) : (
+              'MORE →'
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
