@@ -9,7 +9,7 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
   const clampedScore = Math.max(0, Math.min(10, score));
   const percentage = (clampedScore / 10) * 100;
   const scoreExplanation =
-    'Starts at 5.0, adds points for buzzwords/benchmark theater, subtracts for real shipping evidence, then clamps between 0 and 10.';
+    'We start at 5.0 (default corporate confidence), add points for buzzword gymnastics and benchmark flexing, subtract points if you brought actual shipping receipts, then clamp it between 0 and 10 so the delusion stays numerically manageable.';
   
   const getColor = (score: number) => {
     if (score < 3) return '#22c55e'; // green - grounded
