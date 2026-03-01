@@ -57,9 +57,16 @@ export function BubbleTrendChart({ data }: BubbleTrendChartProps) {
               fontFamily: 'VT323, monospace',
               fontSize: 18,
             }}
-            formatter={(value: number, name: string) =>
-              name === 'avgScore' ? [value.toFixed(2), 'Avg bubble score'] : [value, 'Roasts']
-            }
+            formatter={(value: number | string | undefined, name?: string) => {
+              const numericValue =
+                typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : 0;
+
+              if (name === 'avgScore') {
+                return [numericValue.toFixed(2), 'Avg bubble score'];
+              }
+
+              return [`${Number.isFinite(numericValue) ? Math.round(numericValue) : 0}`, 'Roasts'];
+            }}
           />
           <Bar yAxisId="count" dataKey="roastCount" name="roastCount" fill="#9b8f76" radius={[2, 2, 0, 0]} />
           <Line
