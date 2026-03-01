@@ -28,29 +28,16 @@ export async function calculateLeaderboard(
   });
 
   const leaderboard: Record<string, LeaderboardEntry> = {};
+  const usedRoastIds = new Set<string>();
 
-  let maxAgenticScore = 0;
-  let maxAgenticRoast = null;
-  for (const roast of roasts) {
-    const text = roast.post.textExcerpt.toLowerCase();
-    const agenticCount = (text.match(/agentic/g) || []).length;
-    if (agenticCount > maxAgenticScore) {
-      maxAgenticScore = agenticCount;
-      maxAgenticRoast = roast;
-    }
-  }
-  if (maxAgenticRoast) {
-    leaderboard['most_agentic'] = {
-      category: 'Most Agentic',
-      roast: maxAgenticRoast,
-      score: maxAgenticScore,
-    };
-  }
+  const sortedByBubbleDesc = [...roasts].sort((a, b) => b.bubbleScore - a.bubbleScore);
+  const sortedByBubbleAsc = [...roasts].sort((a, b) => a.bubbleScore - b.bubbleScore);
 
-  const biggestBubble = roasts.reduce((max, roast) =>
-    roast.bubbleScore > (max?.bubbleScore || 0) ? roast : max
-  , null as any);
+  const firstUnused = (items: any[]) => items.find((item) => !usedRoastIds.has(item.id)) || null;
+
+  const biggestBubble = firstUnused(sortedByBubbleDesc);
   if (biggestBubble) {
+    usedRoastIds.add(biggestBubble.id);
     leaderboard['biggest_bubble'] = {
       category: 'Biggest Bubble',
       roast: biggestBubble,
@@ -58,10 +45,9 @@ export async function calculateLeaderboard(
     };
   }
 
-  const mostGrounded = roasts.reduce((min, roast) =>
-    roast.bubbleScore < (min?.bubbleScore || 10) ? roast : min
-  , null as any);
+  const mostGrounded = firstUnused(sortedByBubbleAsc);
   if (mostGrounded) {
+    usedRoastIds.add(mostGrounded.id);
     leaderboard['most_grounded'] = {
       category: 'Most Grounded',
       roast: mostGrounded,
@@ -69,41 +55,57 @@ export async function calculateLeaderboard(
     };
   }
 
-  let maxBenchmarkScore = 0;
-  let maxBenchmarkRoast = null;
-  for (const roast of roasts) {
-    const text = roast.post.textExcerpt.toLowerCase();
-    const benchmarkCount = 
-      (text.match(/sota|state of the art|outperforms|beats gpt/g) || []).length;
-    if (benchmarkCount > maxBenchmarkScore) {
-      maxBenchmarkScore = benchmarkCount;
-      maxBenchmarkRoast = roast;
-    }
-  }
-  if (maxBenchmarkRoast) {
-    leaderboard['benchmark_theater'] = {
-      category: 'Benchmark Theater Champion',
-      roast: maxBenchmarkRoast,
-      score: maxBenchmarkScore,
+  const agenticCandidates = [...roasts]
+    .map((roast) => {
+      const text = roast.post.textExcerpt.toLowerCase();
+      const score = (text.match(/agentic/g) || []).length;
+      return { roast, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const mostAgentic = agenticCandidates.find((entry) => !usedRoastIds.has(entry.roast.id));
+  if (mostAgentic) {
+    usedRoastIds.add(mostAgentic.roast.id);
+    leaderboard['most_agentic'] = {
+      category: 'Most Agentic',
+      roast: mostAgentic.roast,
+      score: mostAgentic.score,
     };
   }
 
-  let maxStealthScore = 0;
-  let maxStealthRoast = null;
-  for (const roast of roasts) {
-    const text = roast.post.textExcerpt.toLowerCase();
-    const stealthCount = 
-      (text.match(/coming soon|stay tuned|big announcement/g) || []).length;
-    if (stealthCount > maxStealthScore) {
-      maxStealthScore = stealthCount;
-      maxStealthRoast = roast;
-    }
+  const benchmarkCandidates = [...roasts]
+    .map((roast) => {
+      const text = roast.post.textExcerpt.toLowerCase();
+      const score = (text.match(/sota|state of the art|outperforms|beats gpt/g) || []).length;
+      return { roast, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const benchmarkTheater = benchmarkCandidates.find((entry) => !usedRoastIds.has(entry.roast.id));
+  if (benchmarkTheater) {
+    usedRoastIds.add(benchmarkTheater.roast.id);
+    leaderboard['benchmark_theater'] = {
+      category: 'Benchmark Theater Champion',
+      roast: benchmarkTheater.roast,
+      score: benchmarkTheater.score,
+    };
   }
-  if (maxStealthRoast) {
+
+  const stealthCandidates = [...roasts]
+    .map((roast) => {
+      const text = roast.post.textExcerpt.toLowerCase();
+      const score = (text.match(/coming soon|stay tuned|big announcement/g) || []).length;
+      return { roast, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const stealthMode = stealthCandidates.find((entry) => !usedRoastIds.has(entry.roast.id));
+  if (stealthMode) {
+    usedRoastIds.add(stealthMode.roast.id);
     leaderboard['stealth_mode'] = {
       category: 'Stealth Mode Master',
-      roast: maxStealthRoast,
-      score: maxStealthScore,
+      roast: stealthMode.roast,
+      score: stealthMode.score,
     };
   }
 
