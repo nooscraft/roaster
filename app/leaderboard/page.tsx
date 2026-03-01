@@ -75,9 +75,6 @@ export default function LeaderboardPage() {
                     <p className="pixel-font mt-3" style={{ fontSize: '8px', color: '#1a1a1a' }}>
                       {label}
                     </p>
-                    <span className="retro-badge mt-3">
-                      #{Math.round(entry.score * 10) / 10}
-                    </span>
                   </div>
 
                   {/* Right: content */}
