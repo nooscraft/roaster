@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { RoastCard } from '@/components/RoastCard';
+import { FunnyLoading } from '@/components/retro/FunnyLoading';
 
 interface Roast {
   id: string;
@@ -51,6 +52,7 @@ export default function Home() {
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [newestApprovedAt, setNewestApprovedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [handleFilter, setHandleFilter] = useState('');
   const [minScore, setMinScore] = useState(0);
   const [maxScore, setMaxScore] = useState(10);
@@ -99,52 +101,74 @@ export default function Home() {
       </div>
 
       {/* Filters */}
-      <div className="retro-card mb-10">
-        <h3 className="pixel-font mb-6" style={{ fontSize: '11px', color: '#1a1a1a' }}>
-          FILTERS
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>HANDLE</label>
-            <input
-              className="retro-input"
-              placeholder="e.g. OpenAI"
-              value={handleFilter}
-              onChange={(e) => setHandleFilter(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MIN BUBBLE SCORE: {minScore}</label>
-            <input
-              type="range" min="0" max="10" step="0.5"
-              value={minScore}
-              onChange={(e) => setMinScore(parseFloat(e.target.value))}
-              className="w-full mt-2"
-              style={{ accentColor: '#F5C518' }}
-            />
-          </div>
-          <div>
-            <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MAX BUBBLE SCORE: {maxScore}</label>
-            <input
-              type="range" min="0" max="10" step="0.5"
-              value={maxScore}
-              onChange={(e) => setMaxScore(parseFloat(e.target.value))}
-              className="w-full mt-2"
-              style={{ accentColor: '#F5C518' }}
-            />
-          </div>
-        </div>
-        <div className="mt-6">
-          <button className="retro-button" onClick={fetchRoasts}>
-            APPLY FILTERS
+      <div
+        className="retro-card mb-10"
+        style={!showFilters ? { padding: '12px 16px' } : undefined}
+      >
+        <div className={`flex flex-wrap items-center justify-between gap-3 ${showFilters ? 'mb-4' : ''}`}>
+          <h3 className="pixel-font" style={{ fontSize: '11px', color: '#1a1a1a' }}>
+            FILTERS
+          </h3>
+          <button
+            type="button"
+            className="retro-button"
+            onClick={() => setShowFilters((prev) => !prev)}
+            style={{ fontSize: '8px', padding: '7px 12px' }}
+          >
+            {showFilters ? 'HIDE FILTERS' : 'SHOW FILTERS'}
           </button>
         </div>
+
+        {!showFilters ? (
+          <p style={{ color: '#666', fontFamily: 'VT323, monospace', fontSize: '17px', lineHeight: 1.2 }}>
+            Filters are in witness protection. Expand if you&apos;re here to hunt repeat offenders and score inflation.
+          </p>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>HANDLE</label>
+                <input
+                  className="retro-input"
+                  placeholder="e.g. OpenAI"
+                  value={handleFilter}
+                  onChange={(e) => setHandleFilter(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MIN BUBBLE SCORE: {minScore}</label>
+                <input
+                  type="range" min="0" max="10" step="0.5"
+                  value={minScore}
+                  onChange={(e) => setMinScore(parseFloat(e.target.value))}
+                  className="w-full mt-2"
+                  style={{ accentColor: '#F5C518' }}
+                />
+              </div>
+              <div>
+                <label className="roast-label" style={{ fontSize: '9px', color: '#4d4d4d', marginBottom: '8px' }}>MAX BUBBLE SCORE: {maxScore}</label>
+                <input
+                  type="range" min="0" max="10" step="0.5"
+                  value={maxScore}
+                  onChange={(e) => setMaxScore(parseFloat(e.target.value))}
+                  className="w-full mt-2"
+                  style={{ accentColor: '#F5C518' }}
+                />
+              </div>
+            </div>
+            <div className="mt-6">
+              <button className="retro-button" onClick={fetchRoasts}>
+                APPLY FILTERS
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Feed */}
       {loading ? (
         <div className="retro-card text-center py-12">
-          <p className="pixel-font" style={{ fontSize: '11px' }}>LOADING ROASTS...</p>
+          <FunnyLoading text="LOADING ROASTS..." />
         </div>
       ) : roasts.length === 0 ? (
         <div className="retro-card text-center py-12">

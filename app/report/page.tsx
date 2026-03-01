@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { FunnyLoading } from '@/components/retro/FunnyLoading';
 
 const REASONS = [
   { value: 'HARASSMENT', label: 'Harassment' },
@@ -175,7 +176,7 @@ export default function ReportPage() {
 
       <Suspense fallback={
         <div className="retro-card text-center py-12">
-          <p className="pixel-font" style={{ fontSize: '10px' }}>LOADING...</p>
+          <FunnyLoading />
         </div>
       }>
         <ReportForm />

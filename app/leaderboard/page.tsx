@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
+import { FunnyLoading } from '@/components/retro/FunnyLoading';
 
 interface LeaderboardEntry {
   category: string;
@@ -46,7 +47,7 @@ export default function LeaderboardPage() {
 
       {loading ? (
         <div className="retro-card text-center py-12">
-          <p className="pixel-font" style={{ fontSize: '10px' }}>LOADING...</p>
+          <FunnyLoading />
         </div>
       ) : Object.keys(leaderboard).length === 0 ? (
         <div className="retro-card text-center py-12">

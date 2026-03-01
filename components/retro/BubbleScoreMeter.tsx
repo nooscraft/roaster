@@ -18,55 +18,59 @@ export function BubbleScoreMeter({ score, size = 'md' }: BubbleScoreMeterProps) 
     return '#ef4444';               // red - full bubble
   };
 
-  const sizeClasses = {
-    sm: 'w-24 h-24',
-    md: 'w-32 h-32',
-    lg: 'w-48 h-48',
+  const barWidthClasses = {
+    sm: 'w-28',
+    md: 'w-36',
+    lg: 'w-48',
   };
 
-  const textSizeClasses = {
-    sm: 'text-xl',
-    md: 'text-3xl',
-    lg: 'text-5xl',
+  const valueTextSizeClasses = {
+    sm: 'text-base',
+    md: 'text-lg',
+    lg: 'text-xl',
+  };
+
+  const barHeightClasses = {
+    sm: 'h-2.5',
+    md: 'h-3',
+    lg: 'h-3.5',
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className={`${sizeClasses[size]} relative`}>
-        <svg viewBox="0 0 100 100" className="transform -rotate-90">
-          <circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="none"
-            stroke="rgba(0,0,0,0.1)"
-            strokeWidth="8"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="none"
-            stroke={getColor(clampedScore)}
-            strokeWidth="8"
-            strokeDasharray={`${percentage * 2.51} 251`}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span 
-            className={`pixel-font ${textSizeClasses[size]} font-bold`}
-            style={{ color: getColor(clampedScore) }}
-          >
-            {clampedScore.toFixed(1)}
-          </span>
-        </div>
-      </div>
-      <div className="text-center">
+    <div className={`${barWidthClasses[size]} flex flex-col gap-1.5`}>
+      <div className="flex items-center justify-between gap-2">
         <div className="pixel-font" style={{ fontSize: '7px', color: '#888' }}>
           BUBBLE SCORE
         </div>
-        <div className="relative inline-flex items-center gap-1 mt-1 group">
+        <span
+          className={`pixel-font ${valueTextSizeClasses[size]} font-bold`}
+          style={{ color: getColor(clampedScore), lineHeight: 1 }}
+        >
+          {clampedScore.toFixed(1)}
+        </span>
+      </div>
+
+      <div
+        className={`${barHeightClasses[size]} w-full`}
+        style={{
+          background: '#ebe6d7',
+          border: '2px solid #1a1a1a',
+          boxShadow: 'inset 1px 1px 0 rgba(0,0,0,0.15)',
+        }}
+      >
+        <div
+          className={`${barHeightClasses[size]}`}
+          style={{
+            width: `${percentage}%`,
+            background: getColor(clampedScore),
+            transition: 'width 0.2s ease-out',
+          }}
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="text-right">
+        <div className="relative inline-flex items-center gap-1 group">
           <a
             href="/stats#bubble-score-rules"
             style={{

@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { RetroCard } from '@/components/retro/RetroCard';
 import { RetroButton } from '@/components/retro/RetroButton';
+import { FunnyLoading } from '@/components/retro/FunnyLoading';
 import { Suspense } from 'react';
 
 function ErrorContent() {
@@ -41,7 +42,7 @@ function ErrorContent() {
 
 export default function ErrorPage() {
   return (
-    <Suspense fallback={<div className="text-center text-cyan-300">Loading...</div>}>
+    <Suspense fallback={<div className="text-center py-8"><FunnyLoading /></div>}>
       <ErrorContent />
     </Suspense>
   );

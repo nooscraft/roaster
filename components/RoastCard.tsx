@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BubbleScoreMeter } from './retro/BubbleScoreMeter';
+import { Copy } from 'pixelarticons/react/Copy';
+import { ArrowRight } from 'pixelarticons/react/ArrowRight';
 
 interface RoastCardProps {
   roast: {
@@ -88,9 +90,18 @@ export function RoastCard({ roast }: RoastCardProps) {
           LATEST
         </span>
       )}
-      {/* Handle + Score row */}
+      {/* Headline + handle + score */}
       <div className="flex justify-between items-start mb-3">
         <div>
+          <p style={{
+            fontFamily: '"Press Start 2P", cursive',
+            fontSize: '12px',
+            color: '#c0392b',
+            lineHeight: '1.6',
+            marginBottom: '8px',
+          }}>
+            {roast.archetype}
+          </p>
           <a href={xProfileUrl} target="_blank" rel="noopener noreferrer" className="roast-handle">
             @{handle}
           </a>
@@ -114,16 +125,6 @@ export function RoastCard({ roast }: RoastCardProps) {
         </div>
         <BubbleScoreMeter score={roast.bubbleScore} size="sm" />
       </div>
-
-      {/* Archetype */}
-      <p className="mb-3" style={{
-        fontFamily: '"Press Start 2P", cursive',
-        fontSize: '11px',
-        color: '#c0392b',
-        lineHeight: '1.6',
-      }}>
-        {roast.archetype}
-      </p>
 
       {/* Original post */}
       {roast.post.textExcerpt && (
@@ -199,7 +200,14 @@ export function RoastCard({ roast }: RoastCardProps) {
               boxShadow: '3px 3px 0 #1a1a1a',
             }}
           >
-            {copied ? 'COPIED ✓' : 'COPY LINK'}
+            {copied ? (
+              'COPIED ✓'
+            ) : (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <Copy width={12} height={12} />
+                COPY LINK
+              </span>
+            )}
           </button>
           <button
             type="button"
@@ -235,7 +243,10 @@ export function RoastCard({ roast }: RoastCardProps) {
                 LOAD
               </span>
             ) : (
-              'MORE →'
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                MORE
+                <ArrowRight width={12} height={12} />
+              </span>
             )}
           </button>
         </div>

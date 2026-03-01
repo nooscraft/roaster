@@ -54,6 +54,10 @@ export default async function RoastDetailPage({ params }: PageProps) {
   const sections = roast.sections as any;
   const handle = roast.post.source.handle;
   const xProfileUrl = `https://x.com/${handle}`;
+  const siteBaseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://froth-eight.vercel.app';
+  const roastUrl = `${siteBaseUrl}/roast/${roast.id}`;
+  const shareText = `This one got a ${roast.bubbleScore.toFixed(1)}/10 bubble score on @${handle} 😮`;
+  const shareIntentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(roastUrl)}`;
   const scoreBreakdown: Array<{ label: string; score: number; reason?: string }> =
     sections.scoreBreakdown || [];
 
@@ -189,6 +193,20 @@ export default async function RoastDetailPage({ params }: PageProps) {
             {new Date(roast.post.publishedAt).toLocaleDateString()}
           </span>
           <div className="flex gap-2">
+            <a
+              href={shareIntentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="roast-view-btn"
+              style={{
+                border: '2px solid #1d4ed8',
+                background: '#ffffff',
+                color: '#1a1a1a',
+                boxShadow: '3px 3px 0 #1d4ed8',
+              }}
+            >
+              SHARE X
+            </a>
             <CopyButton />
             <a
               href={`/report?roastId=${roast.id}`}

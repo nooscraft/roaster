@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { Home } from "pixelarticons/react/Home";
+import { Trophy } from "pixelarticons/react/Trophy";
+import { Upload } from "pixelarticons/react/Upload";
+import { Analytics } from "pixelarticons/react/Analytics";
 
 export const metadata: Metadata = {
   title: "Froth - Measuring the froth in frontier AI",
@@ -41,11 +45,11 @@ export default function RootLayout({
               </div>
               <nav className="mt-4 flex justify-center gap-3 flex-wrap">
                 {[
-                  { href: '/', label: 'HOME' },
-                  { href: '/leaderboard', label: 'LEADERBOARD' },
-                  { href: '/submit', label: 'SUBMIT' },
-                  { href: '/stats', label: 'STATS' },
-                ].map(({ href, label }) => (
+                  { href: '/', label: 'HOME', Icon: Home },
+                  { href: '/leaderboard', label: 'LEADERBOARD', Icon: Trophy },
+                  { href: '/submit', label: 'SUBMIT', Icon: Upload },
+                  { href: '/stats', label: 'STATS', Icon: Analytics },
+                ].map(({ href, label, Icon }) => (
                   <a
                     key={href}
                     href={href}
@@ -57,8 +61,12 @@ export default function RootLayout({
                       fontFamily: '"Press Start 2P", cursive',
                       fontSize: '9px',
                       textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
                     }}
                   >
+                    <Icon width={14} height={14} />
                     {label}
                   </a>
                 ))}
