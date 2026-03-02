@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -22,6 +23,16 @@ interface BubbleTrendChartProps {
 }
 
 export function BubbleTrendChart({ data }: BubbleTrendChartProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div style={{ width: '100%', height: 260 }} />;
+  }
+
   return (
     <div style={{ width: '100%', height: 260 }}>
       <ResponsiveContainer>
