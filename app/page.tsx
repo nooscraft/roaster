@@ -6,6 +6,7 @@ import { FunnyLoading } from '@/components/retro/FunnyLoading';
 
 interface Roast {
   id: string;
+  approvedAt?: string | null;
   bubbleScore: number;
   archetype: string;
   tags: string[];
@@ -43,8 +44,9 @@ function formatLastRoastLine(iso: string): string {
   return `Last roast batch ${timeStr}${suffix}`;
 }
 
-function getPublishedAtMs(iso: string): number {
-  const ms = new Date(iso).getTime();
+function getRoastOrderMs(roast: Roast): number {
+  const referenceTime = roast.approvedAt ?? roast.post.publishedAt;
+  const ms = new Date(referenceTime).getTime();
   return Number.isNaN(ms) ? 0 : ms;
 }
 
@@ -72,7 +74,7 @@ export default function Home() {
       const res = await fetch(`/api/feed?${params}`);
       const data = await res.json();
       const sortedRoasts = [...(data.roasts || [])].sort(
-        (a: Roast, b: Roast) => getPublishedAtMs(b.post.publishedAt) - getPublishedAtMs(a.post.publishedAt)
+        (a: Roast, b: Roast) => getRoastOrderMs(b) - getRoastOrderMs(a)
       );
       setRoasts(sortedRoasts);
       setNewestApprovedAt(data.newestApprovedAt || null);
