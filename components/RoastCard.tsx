@@ -34,7 +34,7 @@ export function RoastCard({ roast }: RoastCardProps) {
   const tweetUrl = roast.post.url;
   const roastTimestamp = roast.approvedAt ?? roast.post.publishedAt;
   const roastTimeMs = new Date(roastTimestamp).getTime();
-  const isLatestRoast = !Number.isNaN(roastTimeMs) && Date.now() - roastTimeMs <= 24 * 60 * 60 * 1000;
+  const isLatestRoast = !Number.isNaN(roastTimeMs) && Date.now() - roastTimeMs <= 48 * 60 * 60 * 1000;
   const latestAccent = '#c0392b';
 
   const getRoastUrl = () => {
