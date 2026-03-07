@@ -7,9 +7,32 @@ import { Trophy } from "pixelarticons/react/Trophy";
 import { Upload } from "pixelarticons/react/Upload";
 import { Analytics } from "pixelarticons/react/Analytics";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://froth-eight.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Froth - Measuring the froth in frontier AI",
-  description: "Measuring the froth in frontier AI",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "Froth - Measuring the froth in frontier AI",
+    template: "%s | Froth",
+  },
+  description:
+    "Froth measures the buzzword density in AI announcements. We roast corporate hype with bubble scores, translations, and reality checks — one post at a time.",
+  keywords: ["AI", "bubble score", "buzzwords", "startup", "parody", "roast", "frontier AI"],
+  authors: [{ name: "Froth" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Froth",
+    title: "Froth - Measuring the froth in frontier AI",
+    description:
+      "Froth measures the buzzword density in AI announcements. We roast corporate hype with bubble scores, translations, and reality checks.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Froth - Measuring the froth in frontier AI",
+    description:
+      "Froth measures the buzzword density in AI announcements. We roast corporate hype with bubble scores, translations, and reality checks.",
+  },
 };
 
 export default function RootLayout({
@@ -23,6 +46,24 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Froth",
+              url: BASE_URL,
+              description:
+                "Froth measures the buzzword density in AI announcements. We roast corporate hype with bubble scores, translations, and reality checks.",
+              publisher: {
+                "@type": "Organization",
+                name: "Froth",
+                url: BASE_URL,
+              },
+            }),
+          }}
+        />
       </head>
       <body style={{ backgroundColor: '#F2ECD8' }}>
         <GoogleAnalytics />
@@ -34,9 +75,9 @@ export default function RootLayout({
               <div className="flex items-center justify-between">
                 <div />
                 <div className="text-center">
-                  <h1 className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '37px' }}>
+                  <div className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '37px' }} aria-hidden="true">
                     FROTH
-                  </h1>
+                  </div>
                   <p style={{ color: '#888', fontSize: '16px', fontFamily: 'VT323, monospace' }}>
                     MEASURING THE FROTH IN FRONTIER AI
                   </p>

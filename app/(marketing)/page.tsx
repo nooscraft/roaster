@@ -89,9 +89,9 @@ export default function Home() {
     <div>
       {/* Title */}
       <div className="text-center mb-10">
-        <h2 className="pixel-font glow-text mb-3" style={{ fontSize: '20px', color: '#1a1a1a', lineHeight: 1.6 }}>
-          FRESHLY FROTH'D
-        </h2>
+        <h1 className="pixel-font glow-text mb-3" style={{ fontSize: '20px', color: '#1a1a1a', lineHeight: 1.6 }}>
+          FRESHLY FROTH&apos;D
+        </h1>
         <p style={{ color: '#575757', fontFamily: 'VT323, monospace', fontSize: '24px', lineHeight: 1.35 }}>
           Because someone has to hold the buzzword bucket — one post at a time
         </p>
@@ -108,9 +108,9 @@ export default function Home() {
         style={!showFilters ? { padding: '12px 16px' } : undefined}
       >
         <div className={`flex flex-wrap items-center justify-between gap-3 ${showFilters ? 'mb-4' : ''}`}>
-          <h3 className="pixel-font" style={{ fontSize: '11px', color: '#1a1a1a' }}>
+          <h2 className="pixel-font" style={{ fontSize: '11px', color: '#1a1a1a' }}>
             FILTERS
-          </h3>
+          </h2>
           <button
             type="button"
             className="retro-button"

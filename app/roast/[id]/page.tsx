@@ -21,14 +21,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = (roast.sections as any).translation;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://froth-eight.vercel.app';
   const imageUrl = roast.shareImageUrl ? `${baseUrl}${roast.shareImageUrl}` : undefined;
+  const canonicalUrl = `${baseUrl}/roast/${id}`;
 
   return {
     title,
     description,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title,
       description,
-      type: 'website',
+      type: 'article',
+      url: canonicalUrl,
       ...(imageUrl && {
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
       }),
@@ -61,8 +64,35 @@ export default async function RoastDetailPage({ params }: PageProps) {
   const scoreBreakdown: Array<{ label: string; score: number; reason?: string }> =
     sections.scoreBreakdown || [];
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: roast.archetype,
+    description: sections.translation,
+    author: {
+      '@type': 'Organization',
+      name: 'Froth',
+      url: siteBaseUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Froth',
+      url: siteBaseUrl,
+    },
+    datePublished: roast.post.publishedAt,
+    dateModified: roast.approvedAt || roast.post.publishedAt,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': roastUrl,
+    },
+  };
+
   return (
     <div className="max-w-3xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       {/* Back */}
       <a
         href="/"
@@ -84,14 +114,14 @@ export default async function RoastDetailPage({ params }: PageProps) {
             >
               @{handle}
             </a>
-            <p className="mt-3" style={{
+            <h1 className="mt-3" style={{
               fontFamily: '"Press Start 2P", cursive',
               fontSize: '13px',
               color: '#c0392b',
               lineHeight: '1.6',
             }}>
               {roast.archetype}
-            </p>
+            </h1>
           </div>
           <BubbleScoreMeter score={roast.bubbleScore} size="md" />
         </div>

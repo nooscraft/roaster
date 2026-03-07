@@ -1,10 +1,15 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function CardPage({ params }: PageProps) {
   const { id } = await params;
