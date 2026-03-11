@@ -163,7 +163,7 @@ export function RoastCard({ roast }: RoastCardProps) {
       </p>
 
       {/* Footer */}
-      <div className="flex flex-wrap justify-between items-center gap-2 mt-3 pt-3 border-t-2 border-black">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center gap-3 mt-3 pt-3 border-t-2 border-black">
         <span style={{ fontSize: '12px', color: '#888', fontFamily: 'VT323, monospace' }}>
           {new Date(roast.post.publishedAt).toLocaleDateString()}
         </span>
@@ -175,9 +175,6 @@ export function RoastCard({ roast }: RoastCardProps) {
             style={{
               border: '2px solid #1d4ed8',
               cursor: 'pointer',
-              fontSize: '7px',
-              padding: '9px 10px',
-              minWidth: '86px',
               background: '#ffffff',
               color: '#1a1a1a',
               boxShadow: '3px 3px 0 #1d4ed8',
@@ -192,9 +189,6 @@ export function RoastCard({ roast }: RoastCardProps) {
             style={{
               border: 'none',
               cursor: 'pointer',
-              fontSize: '7px',
-              padding: '9px 10px',
-              minWidth: '92px',
               background: copied ? '#27ae60' : '#4b5563',
               color: '#fff',
               boxShadow: '3px 3px 0 #1a1a1a',
@@ -220,9 +214,6 @@ export function RoastCard({ roast }: RoastCardProps) {
             style={{
               border: 'none',
               cursor: isNavigating ? 'wait' : 'pointer',
-              fontSize: '7px',
-              padding: '9px 10px',
-              minWidth: '96px',
               background: '#F5C518',
               color: '#1a1a1a',
               boxShadow: '3px 3px 0 #1a1a1a',

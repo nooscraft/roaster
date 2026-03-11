@@ -88,15 +88,15 @@ export default function Home() {
   return (
     <div>
       {/* Title */}
-      <div className="text-center mb-10">
-        <h1 className="pixel-font glow-text mb-3" style={{ fontSize: '20px', color: '#1a1a1a', lineHeight: 1.6 }}>
+      <div className="text-center mb-6 md:mb-10">
+        <h1 className="pixel-font glow-text mb-2 md:mb-3" style={{ fontSize: 'clamp(16px, 4vw, 20px)', color: '#1a1a1a', lineHeight: 1.6 }}>
           FRESHLY FROTH&apos;D
         </h1>
-        <p style={{ color: '#575757', fontFamily: 'VT323, monospace', fontSize: '24px', lineHeight: 1.35 }}>
+        <p style={{ color: '#575757', fontFamily: 'VT323, monospace', fontSize: 'clamp(18px, 4.5vw, 24px)', lineHeight: 1.35 }}>
           Because someone has to hold the buzzword bucket — one post at a time
         </p>
         {newestApprovedAt && (
-          <p style={{ color: '#4d4d4d', fontFamily: 'VT323, monospace', fontSize: '19px', marginTop: '10px', lineHeight: 1.35 }}>
+          <p style={{ color: '#4d4d4d', fontFamily: 'VT323, monospace', fontSize: 'clamp(16px, 4vw, 19px)', marginTop: '10px', lineHeight: 1.35 }}>
             {formatLastRoastLine(newestApprovedAt)}
           </p>
         )}
@@ -122,7 +122,7 @@ export default function Home() {
         </div>
 
         {!showFilters ? (
-          <p style={{ color: '#666', fontFamily: 'VT323, monospace', fontSize: '17px', lineHeight: 1.2 }}>
+          <p className="filters-collapsed-text" style={{ color: '#666', fontFamily: 'VT323, monospace', fontSize: '17px', lineHeight: 1.2 }}>
             Filters are in witness protection. Expand if you&apos;re here to hunt repeat offenders and score inflation.
           </p>
         ) : (
@@ -180,7 +180,7 @@ export default function Home() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+        <div className="grid gap-4 md:gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))' }}>
           {roasts.map((roast) => (
             <RoastCard key={roast.id} roast={roast} />
           ))}

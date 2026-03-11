@@ -55,21 +55,100 @@ body {
   padding: 24px;
 }
 
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  font-size: 7px;
+  padding: 3px 8px;
+}
+
+.nav-link .nav-link-icon,
+.nav-link svg {
+  width: 10px;
+  height: 10px;
+}
+
+@media (min-width: 768px) {
+  .nav-link {
+    font-size: 9px;
+    padding: 4px 12px;
+    gap: 6px;
+  }
+
+  .nav-link .nav-link-icon,
+  .nav-link svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Small screens (sl-vibe pattern): icons-only compact row */
+@media (max-width: 540px) {
+  header nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .nav-link {
+    font-size: 0;
+    padding: 8px;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    max-width: 40px;
+  }
+  .nav-link .nav-link-icon,
+  .nav-link svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .nav-link-label {
+    display: none;
+  }
+}
+
 /* ── Cards ── */
 .retro-card {
   background: var(--white);
   border: var(--border);
-  padding: 20px;
+  padding: 14px 16px;
   box-shadow: 4px 4px 0 var(--black);
   position: relative;
+}
+
+@media (min-width: 768px) {
+  .retro-card {
+    padding: 20px;
+  }
 }
 
 .roast-card {
   background: var(--white);
   border: 3px solid var(--black);
-  padding: 20px;
+  padding: 14px 16px;
   box-shadow: 5px 5px 0 var(--black);
   transition: transform 0.1s, box-shadow 0.1s;
+}
+
+@media (min-width: 768px) {
+  .roast-card {
+    padding: 20px;
+  }
+}
+
+.filters-collapsed-text {
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .filters-collapsed-text {
+    margin-top: 8px;
+  }
 }
 
 .roast-card:hover {
@@ -142,17 +221,28 @@ body {
 /* MORE / View roast button — dark block with solid shadow, pixel font */
 .roast-view-btn {
   font-family: "Press Start 2P", cursive;
-  font-size: 8px;
+  font-size: 7px;
   background: #1a1a1a;
   color: #fff;
   border: none;
   border-radius: 0;
-  padding: 10px 20px;
-  min-width: 96px;
+  padding: 10px 16px;
+  min-width: 80px;
+  min-height: 44px;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 3px 3px 0 #505050;
   transition: all 0.1s;
+}
+
+@media (min-width: 768px) {
+  .roast-view-btn {
+    font-size: 8px;
+    padding: 10px 20px;
+    min-width: 96px;
+  }
 }
 
 .roast-view-btn:hover {
@@ -187,15 +277,25 @@ body {
   background: var(--yellow);
   border: 3px solid var(--black);
   color: var(--black);
-  padding: 10px 20px;
+  padding: 10px 16px;
+  min-height: 44px;
   font-family: "Press Start 2P", cursive;
-  font-size: 10px;
+  font-size: 9px;
   cursor: pointer;
   text-transform: uppercase;
   box-shadow: 4px 4px 0 var(--black);
   transition: all 0.1s;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .retro-button {
+    padding: 10px 20px;
+    font-size: 10px;
+  }
 }
 
 .retro-button:hover {

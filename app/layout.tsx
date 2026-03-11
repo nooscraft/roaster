@@ -70,21 +70,21 @@ export default function RootLayout({
         <SessionProvider>
         <div className="retro-container min-h-screen flex flex-col">
           {/* Header */}
-          <header style={{ background: '#1a1a1a', borderBottom: '4px solid #1a1a1a' }} className="p-4 mb-8">
+          <header style={{ background: '#1a1a1a', borderBottom: '4px solid #1a1a1a' }} className="px-3 py-3 mb-6 md:p-4 md:mb-8">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-between">
                 <div />
                 <div className="text-center">
-                  <div className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: '37px' }} aria-hidden="true">
+                  <div className="pixel-font glow-text" style={{ color: '#F5C518', fontSize: 'clamp(24px, 8vw, 37px)' }} aria-hidden="true">
                     FROTH
                   </div>
-                  <p style={{ color: '#888', fontSize: '16px', fontFamily: 'VT323, monospace' }}>
+                  <p style={{ color: '#888', fontSize: 'clamp(14px, 3.5vw, 16px)', fontFamily: 'VT323, monospace' }}>
                     MEASURING THE FROTH IN FRONTIER AI
                   </p>
                 </div>
                 <div />
               </div>
-              <nav className="mt-4 flex justify-center gap-3 flex-wrap">
+              <nav className="mt-3 md:mt-4 flex justify-center gap-2 md:gap-3 flex-wrap">
                 {[
                   { href: '/', label: 'HOME', Icon: Home },
                   { href: '/leaderboard', label: 'LEADERBOARD', Icon: Trophy },
@@ -94,32 +94,32 @@ export default function RootLayout({
                   <a
                     key={href}
                     href={href}
+                    className="nav-link"
                     style={{
                       background: '#F5C518',
                       color: '#1a1a1a',
                       border: '2px solid #F5C518',
-                      padding: '4px 12px',
                       fontFamily: '"Press Start 2P", cursive',
-                      fontSize: '9px',
                       textDecoration: 'none',
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '6px',
                     }}
+                    aria-label={label}
+                    title={label}
                   >
-                    <Icon width={14} height={14} />
-                    {label}
+                    <Icon width={14} height={14} className="nav-link-icon" aria-hidden />
+                    <span className="nav-link-label">{label}</span>
                   </a>
                 ))}
               </nav>
             </div>
           </header>
 
-          <main className="w-full max-w-7xl mx-auto px-4 pb-8 flex-1">
+          <main className="w-full max-w-7xl mx-auto px-3 md:px-4 pb-6 md:pb-8 flex-1">
             {children}
           </main>
 
-          <footer style={{ background: '#1a1a1a', borderTop: '4px solid #1a1a1a' }} className="p-6 mt-12">
+          <footer style={{ background: '#1a1a1a', borderTop: '4px solid #1a1a1a' }} className="p-4 md:p-6 mt-8 md:mt-12">
             <div className="max-w-7xl mx-auto text-center">
               <p className="pixel-font mb-2" style={{ color: '#F5C518', fontSize: '10px' }}>
                 FROTH
