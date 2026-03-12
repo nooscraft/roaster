@@ -180,7 +180,7 @@ export default function Home() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 md:gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))' }}>
+        <div className="feed-grid">
           {roasts.map((roast) => (
             <RoastCard key={roast.id} roast={roast} />
           ))}

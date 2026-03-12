@@ -141,6 +141,19 @@ body {
   }
 }
 
+.feed-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+
+@media (min-width: 768px) {
+  .feed-grid {
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}
+
 .filters-collapsed-text {
   margin-top: 0;
 }
