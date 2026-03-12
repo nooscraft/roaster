@@ -50,7 +50,10 @@ function getRoastOrderMs(roast: Roast): number {
   return Number.isNaN(ms) ? 0 : ms;
 }
 
-const PAGE_SIZE = 6;
+function getPageSize() {
+  if (typeof window === 'undefined') return 6;
+  return window.innerWidth < 768 ? 4 : 6;
+}
 
 export default function Home() {
   const [roasts, setRoasts] = useState<Roast[]>([]);
@@ -59,16 +62,19 @@ export default function Home() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [pageSize, setPageSize] = useState(6);
   const [showFilters, setShowFilters] = useState(false);
   const [handleFilter, setHandleFilter] = useState('');
   const [minScore, setMinScore] = useState(0);
   const [maxScore, setMaxScore] = useState(10);
 
   useEffect(() => {
-    fetchRoasts(1, true);
+    const size = getPageSize();
+    setPageSize(size);
+    fetchRoasts(1, true, size);
   }, []);
 
-  const fetchRoasts = async (pageNum: number, replace: boolean) => {
+  const fetchRoasts = async (pageNum: number, replace: boolean, size = pageSize) => {
     if (replace) setLoading(true);
     else setLoadingMore(true);
     try {
@@ -77,7 +83,7 @@ export default function Home() {
         minScore: minScore.toString(),
         maxScore: maxScore.toString(),
         page: pageNum.toString(),
-        limit: PAGE_SIZE.toString(),
+        limit: size.toString(),
       });
       const res = await fetch(`/api/feed?${params}`);
       const data = await res.json();
@@ -106,11 +112,11 @@ export default function Home() {
   };
 
   const applyFilters = () => {
-    fetchRoasts(1, true);
+    fetchRoasts(1, true, pageSize);
   };
 
   const loadMore = () => {
-    fetchRoasts(page + 1, false);
+    fetchRoasts(page + 1, false, pageSize);
   };
 
   return (
