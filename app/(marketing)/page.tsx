@@ -50,39 +50,67 @@ function getRoastOrderMs(roast: Roast): number {
   return Number.isNaN(ms) ? 0 : ms;
 }
 
+const PAGE_SIZE = 6;
+
 export default function Home() {
   const [roasts, setRoasts] = useState<Roast[]>([]);
   const [newestApprovedAt, setNewestApprovedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [handleFilter, setHandleFilter] = useState('');
   const [minScore, setMinScore] = useState(0);
   const [maxScore, setMaxScore] = useState(10);
 
   useEffect(() => {
-    fetchRoasts();
+    fetchRoasts(1, true);
   }, []);
 
-  const fetchRoasts = async () => {
-    setLoading(true);
+  const fetchRoasts = async (pageNum: number, replace: boolean) => {
+    if (replace) setLoading(true);
+    else setLoadingMore(true);
     try {
       const params = new URLSearchParams({
         ...(handleFilter && { handle: handleFilter }),
         minScore: minScore.toString(),
         maxScore: maxScore.toString(),
+        page: pageNum.toString(),
+        limit: PAGE_SIZE.toString(),
       });
       const res = await fetch(`/api/feed?${params}`);
       const data = await res.json();
-      const sortedRoasts = [...(data.roasts || [])].sort(
-        (a: Roast, b: Roast) => getRoastOrderMs(b) - getRoastOrderMs(a)
-      );
-      setRoasts(sortedRoasts);
-      setNewestApprovedAt(data.newestApprovedAt || null);
+      const incoming: Roast[] = data.roasts || [];
+      if (replace) {
+        const sorted = [...incoming].sort(
+          (a, b) => getRoastOrderMs(b) - getRoastOrderMs(a)
+        );
+        setRoasts(sorted);
+        setNewestApprovedAt(data.newestApprovedAt || null);
+      } else {
+        setRoasts((prev) => {
+          const combined = [...prev, ...incoming];
+          return combined.sort((a, b) => getRoastOrderMs(b) - getRoastOrderMs(a));
+        });
+      }
+      const { total, pages } = data.pagination ?? {};
+      setHasMore(pageNum < (pages ?? 1));
+      setPage(pageNum);
     } catch (error) {
       console.error('Failed to fetch roasts:', error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  };
+
+  const applyFilters = () => {
+    fetchRoasts(1, true);
+  };
+
+  const loadMore = () => {
+    fetchRoasts(page + 1, false);
   };
 
   return (
@@ -159,7 +187,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-6">
-              <button className="retro-button" onClick={fetchRoasts}>
+              <button className="retro-button" onClick={applyFilters}>
                 APPLY FILTERS
               </button>
             </div>
@@ -180,11 +208,30 @@ export default function Home() {
           </p>
         </div>
       ) : (
-        <div className="feed-grid">
-          {roasts.map((roast) => (
-            <RoastCard key={roast.id} roast={roast} />
-          ))}
-        </div>
+        <>
+          <div className="feed-grid">
+            {roasts.map((roast) => (
+              <RoastCard key={roast.id} roast={roast} />
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="text-center mt-8">
+              <button
+                type="button"
+                className="retro-button"
+                onClick={loadMore}
+                disabled={loadingMore}
+                style={{ fontSize: '9px', padding: '10px 24px', opacity: loadingMore ? 0.7 : 1 }}
+              >
+                {loadingMore ? <FunnyLoading text="LOADING..." /> : 'LOAD MORE ROASTS →'}
+              </button>
+              <p style={{ fontFamily: 'VT323, monospace', fontSize: '15px', color: '#999', marginTop: '8px' }}>
+                Showing {roasts.length} roasts. There&apos;s more where that came from.
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
