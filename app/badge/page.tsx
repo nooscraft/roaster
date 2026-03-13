@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FunnyLoading } from '@/components/retro/FunnyLoading';
 
 const LOADING_MESSAGES = [
-  'Fetching your timeline...',
+  'Fetching their timeline...',
   'Analyzing bio for buzzwords...',
   'Calculating delusion density...',
   'Measuring agentic energy...',
@@ -89,12 +89,12 @@ export default function BadgePage() {
           style={{
             color: '#666',
             fontFamily: 'VT323, monospace',
-            fontSize: 'clamp(20px, 5vw, 26px)',
+            fontSize: 'clamp(20px, 5vw, 24px)',
             lineHeight: 1.4,
             marginBottom: '12px',
           }}
         >
-          We'll read your bio, scan your posts, calculate your buzzword density, and roast you accordingly.
+          Drop any X handle — yours, a friend's, or that VC you've been side-eyeing. We'll read their bio, scan their posts, and roast accordingly.
         </p>
         <p
           style={{
@@ -104,7 +104,7 @@ export default function BadgePage() {
             lineHeight: 1.3,
           }}
         >
-          Enter handle. Get destroyed. Share badge. Repeat with friends.
+          Enter handle. Watch someone get destroyed. Share badge. Repeat.
         </p>
       </div>
 
@@ -115,7 +115,7 @@ export default function BadgePage() {
             className="roast-label"
             style={{ fontSize: '10px', color: '#1a1a1a', marginBottom: '12px', display: 'block' }}
           >
-            YOUR X HANDLE
+            HANDLE TO ROAST (yours, a friend's, whoever deserves it)
           </label>
           <input
             type="text"
@@ -154,7 +154,7 @@ export default function BadgePage() {
                   marginTop: '16px',
                 }}
               >
-                This might take 10–15 seconds. We're reading your timeline and calculating your delusion score.
+                This might take 10–15 seconds. We're reading their timeline and calculating their delusion score.
               </p>
             </div>
           ) : (
@@ -163,7 +163,7 @@ export default function BadgePage() {
               className="retro-button"
               style={{ width: '100%', justifyContent: 'center' }}
             >
-              ROAST MY TIMELINE →
+              ROAST THIS TIMELINE →
             </button>
           )}
         </form>
@@ -185,16 +185,16 @@ export default function BadgePage() {
           }}
         >
           <li style={{ marginBottom: '8px' }}>
-            → We grab your bio + last 5 tweets (no replies, no RTs, just your unfiltered confidence)
+            → We grab their bio + last 5 tweets (no replies, no RTs, just pure unfiltered confidence)
           </li>
           <li style={{ marginBottom: '8px' }}>
-            → Run it through the buzzword blender and calculate your bubble score (0–10)
+            → Run it through the buzzword blender and calculate their bubble score (0–10)
           </li>
           <li style={{ marginBottom: '8px' }}>
-            → Generate a roast so savage it might hurt your feelings (but you'll laugh anyway)
+            → Generate a roast so savage their feelings might be hurt (but you'll laugh)
           </li>
           <li>
-            → Hand you a shareable badge so you can flex your delusion score or hide in shame
+            → Hand you a shareable badge to flex their delusion score — or yours, if you're brave enough
           </li>
         </ul>
       </div>
