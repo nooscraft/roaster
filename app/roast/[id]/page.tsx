@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { BubbleScoreMeter } from '@/components/retro/BubbleScoreMeter';
 import { Metadata } from 'next';
 import { CopyButton } from './CopyButton';
+import { ShareButton } from './ShareButton';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -223,20 +224,7 @@ export default async function RoastDetailPage({ params }: PageProps) {
             {new Date(roast.post.publishedAt).toLocaleDateString()}
           </span>
           <div className="flex gap-2">
-            <a
-              href={shareIntentUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="roast-view-btn"
-              style={{
-                border: '2px solid #1d4ed8',
-                background: '#ffffff',
-                color: '#1a1a1a',
-                boxShadow: '3px 3px 0 #1d4ed8',
-              }}
-            >
-              SHARE X
-            </a>
+            <ShareButton shareUrl={shareIntentUrl} />
             <CopyButton />
             <a
               href={`/report?roastId=${roast.id}`}

@@ -292,10 +292,22 @@ export default async function StatsPage() {
         <p className="pixel-font mb-3" style={{ fontSize: '10px', color: '#1a1a1a' }}>
           IS THE INDUSTRY HEALING OR GETTING WORSE?
         </p>
-        <p className="text-[24px] md:text-[30px]" style={{ fontFamily: 'VT323, monospace', color: trendColor, lineHeight: 1.1 }}>
-          {trendLabel}
-        </p>
-        <p style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a', marginTop: '8px', lineHeight: 1.2 }}>
+        <div
+          style={{
+            display: 'inline-block',
+            background: trendColor,
+            color: '#fff',
+            border: '3px solid #1a1a1a',
+            boxShadow: '4px 4px 0 #1a1a1a',
+            padding: '12px 20px',
+            marginBottom: '12px',
+          }}
+        >
+          <p className="pixel-font" style={{ fontSize: '12px', lineHeight: 1.4, margin: 0 }}>
+            INDUSTRY STATUS: {trendLabel}
+          </p>
+        </div>
+        <p style={{ fontFamily: 'VT323, monospace', fontSize: '18px', color: '#1a1a1a', lineHeight: 1.2 }}>
           {trendMessage}
         </p>
         <div className="flex flex-wrap gap-3 mt-3">

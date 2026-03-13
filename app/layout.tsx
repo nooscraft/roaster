@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { KonamiEasterEgg } from "@/components/KonamiEasterEgg";
 import { Home } from "pixelarticons/react/Home";
 import { Trophy } from "pixelarticons/react/Trophy";
 import { Upload } from "pixelarticons/react/Upload";
@@ -67,6 +68,7 @@ export default function RootLayout({
       </head>
       <body style={{ backgroundColor: '#F2ECD8' }}>
         <GoogleAnalytics />
+        <KonamiEasterEgg />
         <SessionProvider>
         <div className="retro-container min-h-screen flex flex-col">
           {/* Header */}

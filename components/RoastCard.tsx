@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { BubbleScoreMeter } from './retro/BubbleScoreMeter';
 import { Copy } from 'pixelarticons/react/Copy';
 import { ArrowRight } from 'pixelarticons/react/ArrowRight';
+import confetti from 'canvas-confetti';
 
 interface RoastCardProps {
   roast: {
@@ -48,10 +49,27 @@ export function RoastCard({ roast }: RoastCardProps) {
     setTimeout(() => setCopied(false), 1200);
   };
 
-  const handleShareOnX = () => {
+  const handleShareOnX = (e: React.MouseEvent<HTMLButtonElement>) => {
     const roastUrl = getRoastUrl();
     const shareText = `This one got a ${roast.bubbleScore.toFixed(1)}/10 bubble score on @${handle} 😮`;
     const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(roastUrl)}`;
+    
+    // Bubble pop confetti effect
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+    
+    confetti({
+      particleCount: 30,
+      spread: 60,
+      origin: { x, y },
+      colors: ['#F5C518', '#c0392b', '#1a1a1a'],
+      shapes: ['circle'],
+      scalar: 0.8,
+      gravity: 1.2,
+      ticks: 100,
+    });
+    
     window.open(intentUrl, '_blank', 'noopener,noreferrer');
   };
 
