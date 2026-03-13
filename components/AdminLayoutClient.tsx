@@ -16,6 +16,7 @@ export function AdminLayoutClient({
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/roasts', label: 'Roasts', icon: '🔥' },
+    { href: '/admin/badges', label: 'Badges', icon: '🏆' },
     { href: '/admin/handles', label: 'Handles', icon: '🎯' },
     { href: '/admin/reports', label: 'Reports', icon: '⚠️' },
     { href: '/admin/prompts', label: 'Prompts', icon: '💬' },

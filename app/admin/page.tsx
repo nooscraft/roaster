@@ -94,6 +94,9 @@ export default function AdminDashboard() {
           <a href="/admin/reports" className="admin-link">
             <span style={{ color: '#c0392b' }}>→</span> Review Reports
           </a>
+          <a href="/admin/badges" className="admin-link">
+            <span style={{ color: '#c0392b' }}>→</span> Manage Badges
+          </a>
           <a href="/admin/handles" className="admin-link">
             <span style={{ color: '#c0392b' }}>→</span> Manage Handles
           </a>
