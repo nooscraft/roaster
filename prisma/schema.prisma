@@ -175,3 +175,16 @@ model OptOut {
 
   @@index([matchType])
 }
+
+model Badge {
+  id            String   @id @default(cuid())
+  handle        String
+  bubbleScore   Float
+  roastText     String   @db.Text
+  bioText       String?  @db.Text
+  tweetSamples  Json
+  createdAt     DateTime @default(now())
+
+  @@index([handle])
+  @@index([createdAt])
+}

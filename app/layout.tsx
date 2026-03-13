@@ -7,6 +7,7 @@ import { Home } from "pixelarticons/react/Home";
 import { Trophy } from "pixelarticons/react/Trophy";
 import { Upload } from "pixelarticons/react/Upload";
 import { Analytics } from "pixelarticons/react/Analytics";
+import { Card } from "pixelarticons/react/Card";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://froth-eight.vercel.app";
 
@@ -90,6 +91,7 @@ export default function RootLayout({
                 {[
                   { href: '/', label: 'HOME', Icon: Home },
                   { href: '/leaderboard', label: 'LEADERBOARD', Icon: Trophy },
+                  { href: '/badge', label: 'BADGE', Icon: Card },
                   { href: '/submit', label: 'SUBMIT', Icon: Upload },
                   { href: '/stats', label: 'STATS', Icon: Analytics },
                 ].map(({ href, label, Icon }) => (
