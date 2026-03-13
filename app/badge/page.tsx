@@ -24,9 +24,23 @@ export default function BadgePage() {
     e.preventDefault();
     setError('');
 
-    const cleanHandle = handle.trim();
+    let cleanHandle = handle.trim();
     if (!cleanHandle) {
       setError('Please enter a handle');
+      return;
+    }
+
+    // Extract handle from X URL if provided
+    // Supports: https://x.com/handle, https://twitter.com/handle, x.com/handle, @handle, or just handle
+    const urlMatch = cleanHandle.match(/(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)\/([^\/\?]+)/i);
+    if (urlMatch) {
+      cleanHandle = urlMatch[1];
+    }
+    // Remove @ if present
+    cleanHandle = cleanHandle.replace(/^@/, '');
+
+    if (!cleanHandle) {
+      setError('Please enter a valid handle');
       return;
     }
 
@@ -106,7 +120,7 @@ export default function BadgePage() {
           <input
             type="text"
             className="retro-input"
-            placeholder="e.g. elonmusk or @elonmusk"
+            placeholder="e.g. elonmusk, @elonmusk, or https://x.com/elonmusk"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
             disabled={loading}

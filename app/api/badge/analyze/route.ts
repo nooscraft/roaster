@@ -19,11 +19,11 @@ async function generateSimpleRoast(prompt: string): Promise<string> {
   const completion = await client.chat.completions.create({
     model: 'anthropic/claude-3.5-haiku',
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.9,
-    max_tokens: 300,
+    temperature: 1.0, // Increased for more creative/savage roasts
+    max_tokens: 500, // Increased for longer roasts
   });
 
-  return completion.choices[0]?.message?.content?.trim() || 'Your timeline is a mystery wrapped in an enigma.';
+  return completion.choices[0]?.message?.content?.trim() || 'Your timeline is so bland, even the algorithm gave up trying to recommend it to people.';
 }
 
 export async function POST(request: NextRequest) {
@@ -132,18 +132,36 @@ export async function POST(request: NextRequest) {
     );
 
     // Generate roast using LLM
-    const roastPrompt = `You are a savage AI roast generator. Analyze this person's X profile and roast them based on their bio and recent tweets. Be funny, sharp, and a bit mean (but not cruel). Focus on:
-- Buzzword density (agentic, paradigm shift, frontier, etc.)
-- Vague claims without substance
-- Benchmark flexing without context
-- Stealth mode / "coming soon" energy
-- Gap between bio promises and tweet reality
+    const roastPrompt = `You are a comedy roast generator for a satirical website that roasts AI/tech industry hype and buzzwords. Users voluntarily submit their own profiles for comedic analysis. This is consensual entertainment similar to a comedy roast show.
 
-Bio: "${bio || 'No bio'}"
+Analyze this X profile and write a funny, satirical roast focusing on their use of buzzwords, corporate speak, and tech industry clichés. This is about roasting IDEAS and LANGUAGE PATTERNS, not personal attacks. Focus on:
+
+BUZZWORD ANALYSIS:
+- Overuse of terms like: agentic, paradigm shift, frontier, revolutionary, transformative, disruptive
+- Corporate speak and jargon density
+- Vague claims without substance ("10x better" at what?)
+- "Stealth mode" / "launching soon" / "coming soon" that never materializes
+- Gap between bio promises and actual tweet content
+
+STYLE PATTERNS:
+- LinkedIn-style humble bragging
+- Overly confident claims vs actual demonstrated output
+- Trying too hard to sound important or visionary
+- Generic startup founder clichés
+- Contradictions between different posts
+
+Bio: "${bio || 'No bio provided'}"
 Recent tweets:
 ${top5Tweets.map((t, i) => `${i + 1}. "${t.text}"`).join('\n')}
 
-Generate a 2-3 sentence roast. Make it shareable and funny. Do NOT use hashtags or emojis. Do NOT start with "Here's the roast" or any meta commentary - just deliver the roast directly.`;
+Write a 4-5 sentence comedic roast that:
+- Is funny and shareable
+- Focuses on their LANGUAGE and CONTENT patterns (not them personally)
+- References specific buzzwords or phrases they actually used
+- Is creative and witty
+- Maintains a playful, satirical tone
+
+Do NOT use hashtags or emojis. Do NOT include meta commentary - deliver the roast directly.`;
 
     const roastText = await generateSimpleRoast(roastPrompt);
 

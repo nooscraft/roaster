@@ -89,16 +89,15 @@ export default function RootLayout({
               </div>
               <nav className="mt-3 md:mt-4 flex justify-center gap-2 md:gap-3 flex-wrap">
                 {[
-                  { href: '/', label: 'HOME', Icon: Home },
-                  { href: '/leaderboard', label: 'LEADERBOARD', Icon: Trophy },
-                  { href: '/badge', label: 'BADGE', Icon: Card },
-                  { href: '/submit', label: 'SUBMIT', Icon: Upload },
-                  { href: '/stats', label: 'STATS', Icon: Analytics },
-                ].map(({ href, label, Icon }) => (
+                  { href: '/', label: 'HOME', Icon: Home, glow: false },
+                  { href: '/leaderboard', label: 'LEADERBOARD', Icon: Trophy, glow: false },
+                  { href: '/badge', label: 'BADGE', Icon: Card, glow: true },
+                  { href: '/submit', label: 'SUBMIT', Icon: Upload, glow: false },
+                ].map(({ href, label, Icon, glow }) => (
                   <a
                     key={href}
                     href={href}
-                    className="nav-link"
+                    className={`nav-link ${glow ? 'nav-link-glow' : ''}`}
                     style={{
                       background: '#F5C518',
                       color: '#1a1a1a',
@@ -125,6 +124,28 @@ export default function RootLayout({
 
           <footer style={{ background: '#1a1a1a', borderTop: '4px solid #1a1a1a' }} className="p-4 md:p-6 mt-8 md:mt-12">
             <div className="max-w-7xl mx-auto text-center">
+              <div className="mb-4">
+                <a
+                  href="/stats"
+                  className="nav-link"
+                  style={{
+                    background: '#F5C518',
+                    color: '#1a1a1a',
+                    border: '2px solid #F5C518',
+                    fontFamily: '"Press Start 2P", cursive',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    fontSize: '8px',
+                    padding: '8px 16px',
+                  }}
+                  aria-label="STATS"
+                  title="View detailed statistics"
+                >
+                  <Analytics width={14} height={14} className="nav-link-icon" aria-hidden />
+                  <span className="nav-link-label">VIEW DETAILED STATS</span>
+                </a>
+              </div>
               <p className="pixel-font mb-2" style={{ color: '#F5C518', fontSize: '10px' }}>
                 FROTH
               </p>

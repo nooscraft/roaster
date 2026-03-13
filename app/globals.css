@@ -410,6 +410,20 @@ body {
   animation: blink 1s infinite;
 }
 
+/* Glow effect for badge button */
+.nav-link-glow {
+  animation: badge-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% {
+    box-shadow: 0 0 3px #F5C518, 0 0 6px #F5C518;
+  }
+  50% {
+    box-shadow: 0 0 5px #F5C518, 0 0 10px #F5C518, 0 0 15px #F5C518;
+  }
+}
+
 /* ── Admin filter/tab buttons (cream/black/yellow) ── */
 .admin-tab {
   font-family: "Press Start 2P", cursive;
