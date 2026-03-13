@@ -28,13 +28,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: 'website',
       url: badgeUrl,
-      images: [`${baseUrl}/api/badge/${id}/og-image`],
+      images: [`${baseUrl}/og-badge.png`],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [`${baseUrl}/api/badge/${id}/og-image`],
+      images: [`${baseUrl}/og-badge.png`],
     },
   };
 }
