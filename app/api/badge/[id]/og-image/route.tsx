@@ -1,5 +1,4 @@
 import { ImageResponse } from 'next/og';
-import { prisma } from '@/lib/prisma';
 
 export const runtime = 'edge';
 
@@ -16,12 +15,20 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const badge = await prisma.badge.findUnique({ where: { id } });
+    
+    // Fetch badge data from API route (no Prisma in Edge)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+    const response = await fetch(`${baseUrl}/api/badge/${id}/data`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (!badge) {
+    if (!response.ok) {
       return new Response('Badge not found', { status: 404 });
     }
 
+    const badge = await response.json();
     const scoreColor = getScoreColor(badge.bubbleScore);
 
     return new ImageResponse(
