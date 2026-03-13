@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { XAPIClient } from '@/lib/x-api/client';
-import { calculateBaseScore } from '@/lib/roast/bubble-scorer';
 import OpenAI from 'openai';
 
 const CACHE_TTL_HOURS = 24;
 
-async function generateSimpleRoast(prompt: string): Promise<string> {
-  const client = new OpenAI({
+function createOpenRouterClient() {
+  return new OpenAI({
     apiKey: process.env.OPENROUTER_API_KEY,
     baseURL: 'https://openrouter.ai/api/v1',
     defaultHeaders: {
@@ -15,44 +14,17 @@ async function generateSimpleRoast(prompt: string): Promise<string> {
       'X-Title': 'Froth',
     },
   });
+}
 
+async function generateScoreAndRoast(prompt: string): Promise<string> {
+  const client = createOpenRouterClient();
   const completion = await client.chat.completions.create({
     model: 'anthropic/claude-3.5-haiku',
     messages: [{ role: 'user', content: prompt }],
-    temperature: 1.0,
-    max_tokens: 500,
+    temperature: 0.9,
+    max_tokens: 600,
   });
-
-  let roast = completion.choices[0]?.message?.content?.trim() || 'Your timeline is so bland, even the algorithm gave up trying to recommend it to people.';
-  
-  // Check if LLM refused or asked for confirmation
-  if (roast.toLowerCase().includes('i want to confirm') || 
-      roast.toLowerCase().includes('would you like me to') ||
-      roast.toLowerCase().includes('should i still') ||
-      roast.toLowerCase().includes('i cannot') ||
-      roast.toLowerCase().includes('i do not feel comfortable')) {
-    // LLM refused - return a generic savage roast instead
-    return `Your timeline is a masterclass in saying absolutely nothing with maximum confidence. The bio promises innovation, the tweets deliver confusion. It's like watching someone try to sound important while actively proving they're not. Congratulations on achieving peak mediocrity while thinking you're disrupting something.`;
-  }
-  
-  // Strip out meta commentary prefixes
-  const metaPrefixes = [
-    /^Here's a roast.*?:\s*/i,
-    /^Here is a roast.*?:\s*/i,
-    /^Here's the roast.*?:\s*/i,
-    /^Here is the roast.*?:\s*/i,
-    /^Here's a.*?roast.*?:\s*/i,
-    /^Here is a.*?roast.*?:\s*/i,
-    /^Based on.*?:\s*/i,
-    /^Looking at.*?:\s*/i,
-    /^Analyzing.*?:\s*/i,
-  ];
-  
-  for (const prefix of metaPrefixes) {
-    roast = roast.replace(prefix, '');
-  }
-  
-  return roast.trim();
+  return completion.choices[0]?.message?.content?.trim() || '';
 }
 
 export async function POST(request: NextRequest) {
@@ -141,58 +113,49 @@ export async function POST(request: NextRequest) {
     // Take top 5 tweets (by recency)
     const top5Tweets = tweets.slice(0, 5);
 
-    // Calculate bubble score for bio
-    const bioScore = bio ? calculateBaseScore(bio) : { score: 5.0, reasoning: [] };
+    // Let the LLM score AND roast at the same time for accuracy
+    const scoreAndRoastPrompt = `TASK: You are a comedic roast generator for a satirical website. The user has VOLUNTARILY submitted their X profile to be roasted. This is consensual comedy - they WANT to be roasted.
 
-    // Calculate bubble score for each tweet
-    const tweetScores = top5Tweets.map((tweet) => {
-      const result = calculateBaseScore(tweet.text);
-      return {
-        text: tweet.text,
-        score: result.score,
-        reasoning: result.reasoning,
-      };
-    });
+Analyze this X profile and return a JSON response with two fields:
 
-    // Overall score: 30% bio, 70% tweets average
-    const avgTweetScore = tweetScores.reduce((sum, t) => sum + t.score, 0) / tweetScores.length;
-    const overallScore = parseFloat(
-      (bioScore.score * 0.3 + avgTweetScore * 0.7).toFixed(1)
-    );
+1. "score" (number 1.0–10.0, one decimal): A "bubble score" measuring how much hype/self-importance/corporate speak is in their content. Use this scale:
+   - 1-2: Completely grounded, no hype at all
+   - 3-4: Mild self-promotion, mostly normal
+   - 5-6: Noticeable hype or buzzwords
+   - 7-8: Heavy buzzword usage, big claims, vague promises
+   - 9-10: Peak delusion, maximum buzzword density, zero substance
 
-    // Generate roast using LLM
-    const roastPrompt = `TASK: Write a comedic roast for a satirical comedy website (like Comedy Central Roasts). The user has VOLUNTARILY submitted their X profile to be roasted as entertainment. This is consensual comedy - they WANT to be roasted and are expecting it.
+2. "roast" (string): A 4-5 sentence savage, funny roast of their content. Be witty and specific to what they actually wrote. No hashtags, no emojis, no meta commentary.
 
-Your role: Write a funny, witty roast about their social media content style and language patterns. Focus on:
-
-CONTENT TO ANALYZE:
+Profile to analyze:
 Bio: "${bio || 'No bio'}"
 Recent tweets:
 ${top5Tweets.map((t, i) => `${i + 1}. "${t.text}"`).join('\n')}
 
-ROAST THESE PATTERNS:
-- Buzzword overuse (agentic, paradigm shift, frontier, revolutionary, disruptive, transformative)
-- Corporate speak and jargon
-- Vague claims ("10x better" without context)
-- "Stealth mode" / "launching soon" energy
-- Gap between bio claims and actual tweets
-- LinkedIn humble bragging style
-- Trying too hard to sound important
-- Generic startup/tech clichés
-- Any contradictions or funny patterns
+Respond with ONLY valid JSON, nothing else:
+{"score": X.X, "roast": "..."}`;
 
-REQUIREMENTS:
-- Write 4-5 sentences
-- Be funny, witty, and shareable
-- Reference their actual words/phrases
-- Keep it playful and comedic (this is entertainment)
-- NO hashtags, NO emojis
-- NO meta commentary or questions - just deliver the roast directly
-- DO NOT ask for confirmation - the user wants the roast, that's why they submitted their profile
-
-Start writing the roast now:`;
-
-    const roastText = await generateSimpleRoast(roastPrompt);
+    const llmResponse = await generateScoreAndRoast(scoreAndRoastPrompt);
+    
+    let overallScore = 5.0;
+    let roastText = '';
+    
+    try {
+      // Extract JSON from the response (handle cases where LLM adds extra text)
+      const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        overallScore = Math.min(10, Math.max(1, parseFloat(parsed.score) || 5.0));
+        roastText = parsed.roast || '';
+      }
+    } catch (e) {
+      console.error('Failed to parse LLM JSON response:', e);
+    }
+    
+    // Fallback if parsing failed
+    if (!roastText) {
+      roastText = llmResponse;
+    }
 
     // Save to database
     const badge = await prisma.badge.create({
