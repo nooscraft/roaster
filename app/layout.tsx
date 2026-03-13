@@ -150,7 +150,7 @@ export default function RootLayout({
                 FROTH
               </p>
               <p style={{ color: '#888', fontFamily: 'VT323, monospace', fontSize: '16px' }}>
-                Parody content. Roasting corporate hype, not people.
+                Parody content. Roasting corporate hype — and anyone brave enough to hand us their handle.
               </p>
               <p style={{ color: '#f5c518', fontFamily: 'VT323, monospace', fontSize: '12px', marginTop: '8px' }}>
                 Made with reckless VC money, delusional optimism, and absolutely zero adult supervision 🚀
