@@ -19,11 +19,30 @@ async function generateSimpleRoast(prompt: string): Promise<string> {
   const completion = await client.chat.completions.create({
     model: 'anthropic/claude-3.5-haiku',
     messages: [{ role: 'user', content: prompt }],
-    temperature: 1.0, // Increased for more creative/savage roasts
-    max_tokens: 500, // Increased for longer roasts
+    temperature: 1.0,
+    max_tokens: 500,
   });
 
-  return completion.choices[0]?.message?.content?.trim() || 'Your timeline is so bland, even the algorithm gave up trying to recommend it to people.';
+  let roast = completion.choices[0]?.message?.content?.trim() || 'Your timeline is so bland, even the algorithm gave up trying to recommend it to people.';
+  
+  // Strip out meta commentary prefixes
+  const metaPrefixes = [
+    /^Here's a roast.*?:\s*/i,
+    /^Here is a roast.*?:\s*/i,
+    /^Here's the roast.*?:\s*/i,
+    /^Here is the roast.*?:\s*/i,
+    /^Here's a.*?roast.*?:\s*/i,
+    /^Here is a.*?roast.*?:\s*/i,
+    /^Based on.*?:\s*/i,
+    /^Looking at.*?:\s*/i,
+    /^Analyzing.*?:\s*/i,
+  ];
+  
+  for (const prefix of metaPrefixes) {
+    roast = roast.replace(prefix, '');
+  }
+  
+  return roast.trim();
 }
 
 export async function POST(request: NextRequest) {
