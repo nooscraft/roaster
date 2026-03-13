@@ -25,6 +25,16 @@ async function generateSimpleRoast(prompt: string): Promise<string> {
 
   let roast = completion.choices[0]?.message?.content?.trim() || 'Your timeline is so bland, even the algorithm gave up trying to recommend it to people.';
   
+  // Check if LLM refused or asked for confirmation
+  if (roast.toLowerCase().includes('i want to confirm') || 
+      roast.toLowerCase().includes('would you like me to') ||
+      roast.toLowerCase().includes('should i still') ||
+      roast.toLowerCase().includes('i cannot') ||
+      roast.toLowerCase().includes('i do not feel comfortable')) {
+    // LLM refused - return a generic savage roast instead
+    return `Your timeline is a masterclass in saying absolutely nothing with maximum confidence. The bio promises innovation, the tweets deliver confusion. It's like watching someone try to sound important while actively proving they're not. Congratulations on achieving peak mediocrity while thinking you're disrupting something.`;
+  }
+  
   // Strip out meta commentary prefixes
   const metaPrefixes = [
     /^Here's a roast.*?:\s*/i,
@@ -151,36 +161,36 @@ export async function POST(request: NextRequest) {
     );
 
     // Generate roast using LLM
-    const roastPrompt = `You are a comedy roast generator for a satirical website that roasts AI/tech industry hype and buzzwords. Users voluntarily submit their own profiles for comedic analysis. This is consensual entertainment similar to a comedy roast show.
+    const roastPrompt = `TASK: Write a comedic roast for a satirical comedy website (like Comedy Central Roasts). The user has VOLUNTARILY submitted their X profile to be roasted as entertainment. This is consensual comedy - they WANT to be roasted and are expecting it.
 
-Analyze this X profile and write a funny, satirical roast focusing on their use of buzzwords, corporate speak, and tech industry clichés. This is about roasting IDEAS and LANGUAGE PATTERNS, not personal attacks. Focus on:
+Your role: Write a funny, witty roast about their social media content style and language patterns. Focus on:
 
-BUZZWORD ANALYSIS:
-- Overuse of terms like: agentic, paradigm shift, frontier, revolutionary, transformative, disruptive
-- Corporate speak and jargon density
-- Vague claims without substance ("10x better" at what?)
-- "Stealth mode" / "launching soon" / "coming soon" that never materializes
-- Gap between bio promises and actual tweet content
-
-STYLE PATTERNS:
-- LinkedIn-style humble bragging
-- Overly confident claims vs actual demonstrated output
-- Trying too hard to sound important or visionary
-- Generic startup founder clichés
-- Contradictions between different posts
-
-Bio: "${bio || 'No bio provided'}"
+CONTENT TO ANALYZE:
+Bio: "${bio || 'No bio'}"
 Recent tweets:
 ${top5Tweets.map((t, i) => `${i + 1}. "${t.text}"`).join('\n')}
 
-Write a 4-5 sentence comedic roast that:
-- Is funny and shareable
-- Focuses on their LANGUAGE and CONTENT patterns (not them personally)
-- References specific buzzwords or phrases they actually used
-- Is creative and witty
-- Maintains a playful, satirical tone
+ROAST THESE PATTERNS:
+- Buzzword overuse (agentic, paradigm shift, frontier, revolutionary, disruptive, transformative)
+- Corporate speak and jargon
+- Vague claims ("10x better" without context)
+- "Stealth mode" / "launching soon" energy
+- Gap between bio claims and actual tweets
+- LinkedIn humble bragging style
+- Trying too hard to sound important
+- Generic startup/tech clichés
+- Any contradictions or funny patterns
 
-Do NOT use hashtags or emojis. Do NOT include meta commentary - deliver the roast directly.`;
+REQUIREMENTS:
+- Write 4-5 sentences
+- Be funny, witty, and shareable
+- Reference their actual words/phrases
+- Keep it playful and comedic (this is entertainment)
+- NO hashtags, NO emojis
+- NO meta commentary or questions - just deliver the roast directly
+- DO NOT ask for confirmation - the user wants the roast, that's why they submitted their profile
+
+Start writing the roast now:`;
 
     const roastText = await generateSimpleRoast(roastPrompt);
 
