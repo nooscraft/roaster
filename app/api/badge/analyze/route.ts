@@ -114,20 +114,29 @@ export async function POST(request: NextRequest) {
     const top5Tweets = tweets.slice(0, 5);
 
     // Let the LLM score AND roast at the same time for accuracy
-    const scoreAndRoastPrompt = `TASK: You are a comedic roast generator for a satirical website. The user has VOLUNTARILY submitted their X profile to be roasted. This is consensual comedy - they WANT to be roasted.
+    const scoreAndRoastPrompt = `TASK: You are a comedic roast generator for a satirical website. Someone submitted this X profile to be roasted. This is consensual comedy — they want the roast.
+
+IMPORTANT — Identify account type first (from handle, bio, and content style):
+- PERSONAL: Individual person (casual posts, opinions, life stuff, "views my own", personal handle like @johndoe)
+- BRAND/CORP/ORG: Company, brand, or org account (corporate tone, "we're building", product announcements, official branding)
+
+ROAST TONE based on account type:
+- If PERSONAL: Roast the person directly — "Your timeline...", "You...", "Your bio..."
+- If BRAND/CORP/ORG: Roast the account/brand, NOT a person — "This account's content...", "The marketing team here...", "This brand's corporate speak...", "Whoever runs this account..."
 
 Analyze this X profile and return a JSON response with two fields:
 
-1. "score" (number 1.0–10.0, one decimal): A "bubble score" measuring how much hype/self-importance/corporate speak is in their content. Use this scale:
+1. "score" (number 1.0–10.0, one decimal): A "bubble score" measuring how much hype/self-importance/corporate speak is in the content. Use this scale:
    - 1-2: Completely grounded, no hype at all
    - 3-4: Mild self-promotion, mostly normal
    - 5-6: Noticeable hype or buzzwords
    - 7-8: Heavy buzzword usage, big claims, vague promises
    - 9-10: Peak delusion, maximum buzzword density, zero substance
 
-2. "roast" (string): A 4-5 sentence savage, funny roast of their content. Be witty and specific to what they actually wrote. No hashtags, no emojis, no meta commentary.
+2. "roast" (string): A 4-5 sentence savage, funny roast. Use the appropriate tone (person vs brand) based on your account-type assessment. Be witty and specific to what they actually wrote. No hashtags, no emojis, no meta commentary.
 
 Profile to analyze:
+Handle: @${cleanHandle}
 Bio: "${bio || 'No bio'}"
 Recent tweets:
 ${top5Tweets.map((t, i) => `${i + 1}. "${t.text}"`).join('\n')}
