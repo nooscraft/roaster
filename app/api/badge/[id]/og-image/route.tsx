@@ -1,8 +1,6 @@
 import { ImageResponse } from 'next/og';
-import { prisma } from '@/lib/prisma';
 
-// Node.js runtime - no Edge size limits, direct Prisma access
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 function getScoreColor(score: number): string {
   if (score < 3) return '#22c55e';
@@ -17,15 +15,18 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const badge = await prisma.badge.findUnique({
-      where: { id },
-      select: { handle: true, bubbleScore: true, roastText: true },
-    });
+    
+    // Use request URL to construct internal API call
+    const url = new URL(request.url);
+    const dataUrl = `${url.protocol}//${url.host}/api/badge/${id}/data`;
+    
+    const response = await fetch(dataUrl);
 
-    if (!badge) {
+    if (!response.ok) {
       return new Response('Badge not found', { status: 404 });
     }
 
+    const badge = await response.json();
     const scoreColor = getScoreColor(badge.bubbleScore);
 
     return new ImageResponse(
