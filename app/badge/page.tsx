@@ -94,7 +94,7 @@ export default function BadgePage() {
             marginBottom: '12px',
           }}
         >
-          We'll read your bio, scan your tweets, calculate your buzzword density, and roast you accordingly.
+          We'll read your bio, scan your posts, calculate your buzzword density, and roast you accordingly.
         </p>
         <p
           style={{
