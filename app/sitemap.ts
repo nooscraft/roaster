@@ -4,11 +4,18 @@ import { prisma } from '@/lib/prisma';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://froth-eight.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const roasts = await prisma.roast.findMany({
-    where: { status: 'APPROVED' },
-    select: { id: true, approvedAt: true },
-    orderBy: { approvedAt: 'desc' },
-  });
+  const [roasts, badges] = await Promise.all([
+    prisma.roast.findMany({
+      where: { status: 'APPROVED' },
+      select: { id: true, approvedAt: true },
+      orderBy: { approvedAt: 'desc' },
+    }),
+    prisma.badge.findMany({
+      select: { id: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: 1000,
+    }),
+  ]);
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -35,6 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    {
+      url: `${BASE_URL}/badge`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
   ];
 
   const roastPages: MetadataRoute.Sitemap = roasts.map((r) => ({
@@ -44,5 +57,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...roastPages];
+  const badgePages: MetadataRoute.Sitemap = badges.map((b) => ({
+    url: `${BASE_URL}/badge/${b.id}`,
+    lastModified: b.createdAt || new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...roastPages, ...badgePages];
 }

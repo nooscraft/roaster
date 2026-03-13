@@ -2,16 +2,16 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Get Your Badge | Froth',
-  description: 'Analyze your X timeline and get roasted by AI. Receive your bubble score and a shareable "I Survived Froth" badge.',
+  description: 'Drop any X handle — yours, a friend\'s, or that VC you\'ve been side-eyeing. Get their bubble score and a savage roast. Share your "I Survived Froth" badge.',
   openGraph: {
     title: 'Get Your Badge | Froth',
-    description: 'Analyze your X timeline and get roasted by AI. Receive your bubble score and a shareable badge.',
+    description: 'Drop any X handle. Get their bubble score, a savage roast, and a shareable badge.',
     images: ['/og-badge.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Get Your Badge | Froth',
-    description: 'Analyze your X timeline and get roasted by AI.',
+    description: 'Drop any X handle. Get their bubble score and a savage roast.',
     images: ['/og-badge.png'],
   },
 };
