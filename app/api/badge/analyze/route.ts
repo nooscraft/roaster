@@ -22,7 +22,7 @@ async function generateScoreAndRoast(prompt: string): Promise<string> {
     model: 'anthropic/claude-3.5-haiku',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.9,
-    max_tokens: 600,
+    max_tokens: 900,
   });
   return completion.choices[0]?.message?.content?.trim() || '';
 }
@@ -133,7 +133,7 @@ Analyze this X profile and return a JSON response with two fields:
    - 7-8: Heavy buzzword usage, big claims, vague promises
    - 9-10: Peak delusion, maximum buzzword density, zero substance
 
-2. "roast" (string): A 4-5 sentence savage, funny roast. Use the appropriate tone (person vs brand) based on your account-type assessment. Be witty and specific to what they actually wrote. No hashtags, no emojis, no meta commentary.
+2. "roast" (string): A lengthy, 7-10 sentence roast that goes hard. Voice: sharp and refined — like a Comedy Central roast writer or a respected satirist. The humor lands through clever observation, precise language, and wit; it should feel professionally written, something a critic would quote. Really go after the ego — the gap between how they present themselves and what they actually deliver, the performative self-importance, the curated persona. Pile it on. Keep the language elevated — no slang, no colloquialisms (e.g. avoid "bro", "vibes" as a noun, "slay"). Use the appropriate tone (person vs brand) based on your account-type assessment. Be specific to what they actually wrote. No hashtags, no emojis, no meta commentary.
 
 Profile to analyze:
 Handle: @${cleanHandle}
