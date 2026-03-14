@@ -57,7 +57,7 @@ export default async function BadgeDetailPage({ params }: PageProps) {
   const scoreColor = getScoreColor(badge.bubbleScore);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://froth.live';
   const shareUrl = `${baseUrl}/badge/${badge.id}`;
-  const shareText = `I got roasted by @froth_live and survived with a bubble score of ${badge.bubbleScore}/10 😮`;
+  const shareText = `I got roasted on Froth and survived with a bubble score of ${badge.bubbleScore}/10 😮`;
   const xIntentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
   return (
